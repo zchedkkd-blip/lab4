@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Авторизация - Система лояльности</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .card {
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            border: none;
+        }
+        .card-header {
+            background: linear-gradient(to right, #2c3e50, #4a6491);
+            border-bottom: 3px solid #ffd700;
+        }
+        .btn {
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        @media (max-width: 768px) {
+            .btn { width: 100%; margin-bottom: 10px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <!-- Заголовок -->
+                <div class="text-center text-white mb-5">
+                    <h1 class="display-4 mb-3">
+                        <i class="bi bi-cup-hot"></i> Система лояльности "Кофе Хауз"
+                    </h1>
+                    <h3 class="text-warning">Лабораторная работа №4</h3>
+                    <p class="lead">Внедрение информационных систем</p>
+                    <p class="mb-0">Студент: Аушакимов Илья, группа 38</p>
+                </div>
+
+                <!-- Форма авторизации -->
+                <div class="card mb-4">
+                    <div class="card-header text-white">
+                        <h4 class="mb-0"><i class="bi bi-person-badge"></i> Форма авторизации</h4>
+                    </div>
+                    <div class="card-body p-4">
+                        <div class="row">
+                            <!-- Левая часть - выбор роли -->
+                            <div class="col-md-4 border-end">
+                                <h5 class="mb-3"><i class="bi bi-people"></i> Выберите роль:</h5>
+                                <div class="form-check mb-3">
+                                    <input class="form-check-input" type="radio" name="role" id="admin" checked>
+                                    <label class="form-check-label w-100" for="admin">
+                                        <strong>Администратор</strong>
+                                        <small class="d-block text-muted">Полный доступ</small>
+                                    </label>
+                                </div>
+                                <div class="form-check mb-3">
+                                    <input class="form-check-input" type="radio" name="role" id="manager">
+                                    <label class="form-check-label w-100" for="manager">
+                                        <strong>Менеджер</strong>
+                                        <small class="d-block text-muted">Управление меню</small>
+                                    </label>
+                                </div>
+                                <div class="form-check mb-3">
+                                    <input class="form-check-input" type="radio" name="role" id="user">
+                                    <label class="form-check-label w-100" for="user">
+                                        <strong>Пользователь</strong>
+                                        <small class="d-block text-muted">Пополнение баланса</small>
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="guest">
+                                    <label class="form-check-label w-100" for="guest">
+                                        <strong>Гость</strong>
+                                        <small class="d-block text-muted">Только просмотр</small>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <!-- Центральная часть - поля ввода -->
+                            <div class="col-md-5">
+                                <h5 class="mb-3"><i class="bi bi-key"></i> Данные для входа:</h5>
+                                <div class="mb-3">
+                                    <label for="email" class="form-label">Email адрес</label>
+                                    <input type="email" class="form-control" id="email" 
+                                           value="admin@cafe.ru" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="password" class="form-label">Пароль</label>
+                                    <input type="password" class="form-control" id="password" required>
+                                </div>
+                                <button class="btn btn-primary w-100 mb-3" id="loginBtn">
+                                    <i class="bi bi-box-arrow-in-right"></i> Войти в систему
+                                </button>
+                                <div class="alert alert-info">
+                                    <h6><i class="bi bi-info-circle"></i> Подсказка:</h6>
+                                    <p class="mb-0">Измените роль слева для автозаполнения email</p>
+                                </div>
+                            </div>
+
+                            <!-- Правая часть - тестовые данные -->
+                            <div class="col-md-3">
+                                <h5 class="mb-3"><i class="bi bi-lightbulb"></i> Тестовые данные:</h5>
+                                <div class="alert alert-success mb-3">
+                                    <h6 class="alert-heading">Администратор</h6>
+                                    <p class="mb-1"><strong>Логин:</strong> admin@cafe.ru</p>
+                                    <p class="mb-0"><strong>Пароль:</strong> Opa*!g</p>
+                                </div>
+                                <div class="alert alert-warning mb-3">
+                                    <h6 class="alert-heading">Менеджер</h6>
+                                    <p class="mb-1"><strong>Логин:</strong> manager@cafe.ru</p>
+                                    <p class="mb-0"><strong>Пароль:</strong> Kla5%</p>
+                                </div>
+                                <div class="alert alert-primary">
+                                    <h6 class="alert-heading">Пользователь</h6>
+                                    <p class="mb-1"><strong>Логин:</strong> anna.p@mail.ru</p>
+                                    <p class="mb-0"><strong>Пароль:</strong> Slko4&</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer text-center">
+                        <small class="text-muted">
+                            <i class="bi bi-building"></i> Колледж Метростроя Санкт-Петербург
+                        </small>
+                    </div>
+                </div>
+
+                <!-- Кнопки навигации -->
+                <div class="text-center">
+                    <a href="admin.html" class="btn btn-success me-2 mb-2">
+                        <i class="bi bi-speedometer2"></i> Перейти в админ-панель
+                    </a>
+                    <a href="user_add.html" class="btn btn-warning mb-2">
+                        <i class="bi bi-plus-circle"></i> Форма добавления товара
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Автозаполнение email при выборе роли
+        document.querySelectorAll('input[name="role"]').forEach(radio => {
+            radio.addEventListener('change', function() {
+                if (this.id === 'admin') {
+                    document.getElementById('email').value = 'admin@cafe.ru';
+                } else if (this.id === 'manager') {
+                    document.getElementById('email').value = 'manager@cafe.ru';
+                } else if (this.id === 'user') {
+                    document.getElementById('email').value = 'anna.p@mail.ru';
+                }
+            });
+        });
+
+        // Обработчик для гостя
+        document.getElementById('guest').addEventListener('change', function() {
+            const emailInput = document.getElementById('email');
+            const passwordInput = document.getElementById('password');
+            const loginBtn = document.getElementById('loginBtn');
+            
+            if (this.checked) {
+                emailInput.disabled = true;
+                passwordInput.disabled = true;
+                emailInput.value = 'guest@example.com';
+                passwordInput.value = '';
+                loginBtn.textContent = 'Войти как гость';
+                loginBtn.classList.remove('btn-primary');
+                loginBtn.classList.add('btn-secondary');
+            } else {
+                emailInput.disabled = false;
+                passwordInput.disabled = false;
+                emailInput.value = 'admin@cafe.ru';
+                loginBtn.innerHTML = '<i class="bi bi-box-arrow-in-right"></i> Войти в систему';
+                loginBtn.classList.remove('btn-secondary');
+                loginBtn.classList.add('btn-primary');
+            }
+        });
+
+        // Кнопка входа
+        document.getElementById('loginBtn').addEventListener('click', function() {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const isGuest = document.getElementById('guest').checked;
+            
+            if (isGuest) {
+                alert('✅ Вход выполнен как гость. Перенаправление...');
+                window.location.href = 'admin.html?role=guest';
+                return;
+            }
+            
+            const users = {
+                'admin@cafe.ru': 'Opa*!g',
+                'manager@cafe.ru': 'Kla5%',
+                'anna.p@mail.ru': 'Slko4&'
+            };
+            
+            if (users[email] && users[email] === password) {
+                alert('✅ Авторизация успешна! Перенаправление...');
+                window.location.href = 'admin.html';
+            } else {
+                alert('❌ Неверный email или пароль!\n\nИспользуйте тестовые данные.');
+            }
+        });
+
+        // Добавляем текущую дату в футер
+        const date = new Date().toLocaleDateString('ru-RU');
+        const footer = document.querySelector('.card-footer small');
+        footer.innerHTML += ` | ${date}`;
+    </script>
+</body>
+</html>
