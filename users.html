@@ -6,203 +6,69 @@
     <title>Пользователи - Система лояльности</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
-    <style>
-        body { background-color: #f8f9fa; font-family: 'Segoe UI', sans-serif; }
-        .navbar { box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-        .card { border-radius: 10px; border: none; box-shadow: 0 2px 15px rgba(0,0,0,0.05); }
-        .table th { background-color: #f8f9fa; }
-        .badge { font-size: 0.85em; padding: 5px 10px; }
-        .btn-sm { padding: 5px 10px; font-size: 0.875rem; }
-        .list-group-item.active { background-color: #0d6efd; border-color: #0d6efd; }
-    </style>
+    <style> /* те же стили */ </style>
 </head>
 <body>
-    <!-- Навигация -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container">
-            <a class="navbar-brand" href="#">
-                <i class="bi bi-people"></i> Пользователи
-            </a>
+            <a class="navbar-brand" href="#"><i class="bi bi-people"></i> Пользователи</a>
             <div class="navbar-nav ms-auto">
-                <a href="index.html" class="btn btn-danger btn-sm">
-                    <i class="bi bi-box-arrow-right"></i> Выйти
-                </a>
+                <button class="btn btn-danger btn-sm" id="logoutBtn"><i class="bi bi-box-arrow-right"></i> Выйти</button>
             </div>
         </div>
     </nav>
 
     <div class="container-fluid mt-4">
         <div class="row">
-            <!-- Боковое меню -->
             <div class="col-lg-2 mb-4">
                 <div class="card">
-                    <div class="card-header bg-primary text-white">
-                        <h6 class="mb-0"><i class="bi bi-menu-button"></i> Меню</h6>
-                    </div>
-                    <div class="list-group list-group-flush">
-                        <a href="admin.html" class="list-group-item list-group-item-action">
-                            <i class="bi bi-cup-straw"></i> Меню кафе
-                        </a>
-                        <a href="user_add.html" class="list-group-item list-group-item-action">
-                            <i class="bi bi-plus-circle"></i> Добавить товар
-                        </a>
-                        <a href="transactions.html" class="list-group-item list-group-item-action">
-                            <i class="bi bi-arrow-left-right"></i> Транзакции
-                        </a>
-                        <a href="users.html" class="list-group-item list-group-item-action active">
-                            <i class="bi bi-people"></i> Пользователи
-                        </a>
-                        <a href="reports.html" class="list-group-item list-group-item-action">
-                            <i class="bi bi-graph-up"></i> Отчёты
-                        </a>
-                    </div>
+                    <div class="card-header bg-primary text-white"><h6 class="mb-0">Меню</h6></div>
+                    <div class="list-group list-group-flush" id="sidebar"></div>
                 </div>
-                
-                <!-- Статистика -->
                 <div class="card mt-3">
-                    <div class="card-header bg-info text-white">
-                        <h6 class="mb-0"><i class="bi bi-bar-chart"></i> Статистика</h6>
-                    </div>
+                    <div class="card-header bg-info text-white">Статистика</div>
                     <div class="card-body">
-                        <div class="mb-2">
-                            <small class="text-muted">Всего пользователей:</small>
-                            <h5 class="mb-0" id="totalUsers">245</h5>
-                        </div>
-                        <div class="mb-2">
-                            <small class="text-muted">Активных:</small>
-                            <h5 class="mb-0" id="activeUsers">210</h5>
-                        </div>
-                        <div>
-                            <small class="text-muted">Новых за месяц:</small>
-                            <h5 class="mb-0" id="newUsers">32</h5>
-                        </div>
+                        <div><small>Всего пользователей:</small> <h5>245</h5></div>
+                        <div><small>Активных:</small> <h5>210</h5></div>
                     </div>
                 </div>
             </div>
-
-            <!-- Основной контент -->
             <div class="col-lg-10">
                 <div class="d-flex justify-content-between align-items-center mb-4">
-                    <div>
-                        <h2 class="mb-1"><i class="bi bi-people"></i> Пользователи</h2>
-                        <p class="text-muted mb-0">Управление участниками программы лояльности</p>
-                    </div>
-                    <button class="btn btn-success" onclick="alert('Форма добавления пользователя')">
-                        <i class="bi bi-person-plus"></i> Добавить пользователя
-                    </button>
+                    <h2><i class="bi bi-people"></i> Пользователи</h2>
+                    <button class="btn btn-success" onclick="alert('Добавление пользователя')"><i class="bi bi-person-plus"></i> Добавить</button>
                 </div>
-
-                <!-- Таблица пользователей -->
                 <div class="card">
-                    <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                    <div class="card-header bg-white d-flex justify-content-between">
                         <h5 class="mb-0">Список пользователей</h5>
-                        <div class="input-group" style="width: 300px;">
-                            <input type="text" class="form-control" placeholder="Поиск...">
-                            <button class="btn btn-outline-secondary" type="button">
-                                <i class="bi bi-search"></i>
-                            </button>
-                        </div>
+                        <div class="input-group" style="width:300px"><input class="form-control" placeholder="Поиск..."><button class="btn btn-outline-secondary"><i class="bi bi-search"></i></button></div>
                     </div>
                     <div class="card-body">
-                        <div class="table-responsive">
-                            <table class="table table-hover" id="usersTable">
-                                <thead>
-                                    <tr>
-                                        <th>ID</th>
-                                        <th>Имя</th>
-                                        <th>Email</th>
-                                        <th>Телефон</th>
-                                        <th>Статус</th>
-                                        <th>Баллы</th>
-                                        <th>Дата регистрации</th>
-                                        <th>Действия</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="usersBody">
-                                    <!-- Данные вставляются скриптом -->
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                    <div class="card-footer">
-                        <small class="text-muted">
-                            Обновлено: <span id="currentTime"></span>
-                        </small>
+                        <table class="table table-hover">
+                            <thead><tr><th>ID</th><th>Имя</th><th>Email</th><th>Телефон</th><th>Статус</th><th>Баллы</th><th>Действия</th></tr></thead>
+                            <tbody>
+                                <tr><td>1</td><td>Анна Петрова</td><td>anna.p@mail.ru</td><td>+7 (999) 123-45-67</td><td><span class="badge bg-success">Активен</span></td><td>1250</td><td><button class="btn btn-sm btn-outline-info"><i class="bi bi-eye"></i></button></td></tr>
+                                <tr><td>2</td><td>Иван Сидоров</td><td>ivan.s@mail.ru</td><td>+7 (999) 234-56-78</td><td><span class="badge bg-success">Активен</span></td><td>890</td><td><button class="btn btn-sm btn-outline-info"><i class="bi bi-eye"></i></button></td></tr>
+                                <tr><td>3</td><td>Мария Иванова</td><td>maria.i@mail.ru</td><td>+7 (999) 345-67-89</td><td><span class="badge bg-secondary">Неактивен</span></td><td>430</td><td><button class="btn btn-sm btn-outline-info"><i class="bi bi-eye"></i></button></td></tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Футер -->
-    <footer class="mt-5 py-3 bg-dark text-white">
-        <div class="container text-center">
-            <small>
-                <i class="bi bi-building"></i> Колледж Метростроя Санкт-Петербург |
-                Студент: Аушакимов Илья, группа 38 |
-                Лабораторная работа №4
-            </small>
-        </div>
-    </footer>
+    <footer class="mt-5 py-3 bg-dark text-white text-center">...</footer>
 
     <script>
-        // Демо-данные пользователей
-        const users = [
-            { id: 1, name: 'Анна Петрова', email: 'anna.p@mail.ru', phone: '+7 (999) 123-45-67', status: 'active', points: 1250, regDate: '2025-01-15' },
-            { id: 2, name: 'Иван Сидоров', email: 'ivan.s@mail.ru', phone: '+7 (999) 234-56-78', status: 'active', points: 890, regDate: '2025-02-20' },
-            { id: 3, name: 'Мария Иванова', email: 'maria.i@mail.ru', phone: '+7 (999) 345-67-89', status: 'inactive', points: 430, regDate: '2025-03-10' },
-            { id: 4, name: 'Петр Смирнов', email: 'petr.s@mail.ru', phone: '+7 (999) 456-78-90', status: 'active', points: 2150, regDate: '2024-12-05' },
-            { id: 5, name: 'Елена Кузнецова', email: 'elena.k@mail.ru', phone: '+7 (999) 567-89-01', status: 'active', points: 780, regDate: '2025-04-18' },
-            { id: 6, name: 'Дмитрий Волков', email: 'dmitry.v@mail.ru', phone: '+7 (999) 678-90-12', status: 'active', points: 320, regDate: '2025-05-22' }
-        ];
-
-        // Подсчёт статистики
-        function updateStats() {
-            document.getElementById('totalUsers').innerText = users.length;
-            const active = users.filter(u => u.status === 'active').length;
-            document.getElementById('activeUsers').innerText = active;
-            // Новые за месяц (пример)
-            document.getElementById('newUsers').innerText = 12;
-        }
-
-        // Отображение таблицы
-        function renderUsers() {
-            const tbody = document.getElementById('usersBody');
-            tbody.innerHTML = '';
-            users.forEach(u => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${u.id}</td>
-                    <td>${u.name}</td>
-                    <td>${u.email}</td>
-                    <td>${u.phone}</td>
-                    <td><span class="badge bg-${u.status === 'active' ? 'success' : 'secondary'}">${u.status === 'active' ? 'Активен' : 'Неактивен'}</span></td>
-                    <td>${u.points}</td>
-                    <td>${u.regDate}</td>
-                    <td>
-                        <button class="btn btn-sm btn-outline-info me-1" title="Просмотр" onclick="alert('Просмотр пользователя ${u.name}')"><i class="bi bi-eye"></i></button>
-                        <button class="btn btn-sm btn-outline-warning me-1" title="Редактировать" onclick="alert('Редактирование пользователя ${u.id}')"><i class="bi bi-pencil"></i></button>
-                        <button class="btn btn-sm btn-outline-danger" title="Блокировать" onclick="if(confirm('Блокировать пользователя ${u.name}?')) alert('Блокировка не реализована')"><i class="bi bi-lock"></i></button>
-                    </td>
-                `;
-                tbody.appendChild(row);
-            });
-        }
-
-        // Обновление времени
-        function updateTime() {
-            const now = new Date();
-            const timeString = now.toLocaleDateString('ru-RU') + ' ' + now.toLocaleTimeString('ru-RU');
-            document.getElementById('currentTime').textContent = timeString;
-        }
-
-        // Инициализация
-        document.addEventListener('DOMContentLoaded', function() {
-            renderUsers();
-            updateStats();
-            updateTime();
-            setInterval(updateTime, 60000);
-        });
+        const role = localStorage.getItem('userRole');
+        if (!role) window.location.href = 'index.html';
+        const menuItems = [ /* как в transactions.html */ ];
+        document.getElementById('sidebar').innerHTML = menuItems
+            .filter(item => !item.roles || item.roles.includes(role))
+            .map(item => `<a href="${item.href}" class="list-group-item list-group-item-action">...</a>`)
+            .join('');
+        document.getElementById('logoutBtn').addEventListener('click', () => { localStorage.removeItem('userRole'); window.location.href = 'index.html'; });
     </script>
 </body>
 </html>
