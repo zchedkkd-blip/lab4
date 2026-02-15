@@ -75,10 +75,10 @@
                                 </label>
                                 <select class="form-select" id="productCategory" required>
                                     <option value="" selected disabled>Выберите категорию</option>
-                                    <option value="drinks">Напитки</option>
-                                    <option value="desserts">Десерты</option>
-                                    <option value="bakery">Выпечка</option>
-                                    <option value="snacks">Закуски</option>
+                                    <option value="Напитки">Напитки</option>
+                                    <option value="Десерты">Десерты</option>
+                                    <option value="Выпечка">Выпечка</option>
+                                    <option value="Закуски">Закуски</option>
                                 </select>
                                 <div class="validation-message text-danger" id="categoryError"></div>
                             </div>
@@ -89,7 +89,6 @@
                                     <label class="form-label fw-bold">
                                         <i class="bi bi-123"></i> Количество *
                                     </label>
-                                    <!-- Добавлен атрибут max -->
                                     <input type="number" class="form-control positive-number" 
                                            id="productQuantity" min="0.1" max="999999999" step="0.1" 
                                            placeholder="Например: 300" required>
@@ -102,23 +101,22 @@
                                     </label>
                                     <select class="form-select" id="productUnit" required>
                                         <option value="" selected disabled>Выберите единицу</option>
-                                        <option value="ml">мл</option>
-                                        <option value="g">г</option>
-                                        <option value="piece">шт.</option>
-                                        <option value="portion">порция</option>
+                                        <option value="мл">мл</option>
+                                        <option value="г">г</option>
+                                        <option value="шт">шт.</option>
+                                        <option value="порция">порция</option>
                                     </select>
                                     <div class="validation-message text-danger" id="unitError"></div>
                                 </div>
                             </div>
 
-                            <!-- Цены (ВАЖНО: только положительные!) -->
+                            <!-- Цены -->
                             <div class="row mb-4">
                                 <div class="col-md-6">
                                     <label class="form-label fw-bold">
                                         <i class="bi bi-currency-ruble"></i> Стоимость в рублях *
                                     </label>
                                     <div class="input-group">
-                                        <!-- Добавлен атрибут max -->
                                         <input type="number" class="form-control positive-number" 
                                                id="productPriceRub" min="0.01" max="999999999" step="0.01" 
                                                placeholder="Например: 250.00" required>
@@ -132,7 +130,6 @@
                                         <i class="bi bi-star"></i> Стоимость в баллах *
                                     </label>
                                     <div class="input-group">
-                                        <!-- Добавлен атрибут max -->
                                         <input type="number" class="form-control positive-number" 
                                                id="productPricePoints" min="1" max="999999999" step="1" 
                                                placeholder="Например: 25" required>
@@ -164,7 +161,7 @@
                                 </div>
                             </div>
 
-                            <!-- Описание -->
+                            <!-- Описание (необязательно) -->
                             <div class="mb-4">
                                 <label class="form-label fw-bold">
                                     <i class="bi bi-text-paragraph"></i> Описание (необязательно)
@@ -197,7 +194,6 @@
                                 <button type="button" class="btn btn-secondary" id="resetBtn">
                                     <i class="bi bi-arrow-clockwise"></i> Сбросить форму
                                 </button>
-                                
                                 <div>
                                     <a href="admin.html" class="btn btn-outline-danger me-2">
                                         <i class="bi bi-x-circle"></i> Отмена
@@ -276,13 +272,11 @@
         function validateNumberField(field) {
             const value = field.value.trim();
             
-            // Если поле пустое
             if (!value) {
                 field.classList.remove('success', 'error');
                 return false;
             }
             
-            // Проверка на число
             const numValue = parseFloat(value);
             if (isNaN(numValue)) {
                 field.classList.remove('success');
@@ -291,7 +285,6 @@
                 return false;
             }
             
-            // Проверка на бесконечность (слишком большое число)
             if (!isFinite(numValue)) {
                 field.classList.remove('success');
                 field.classList.add('error');
@@ -299,7 +292,6 @@
                 return false;
             }
             
-            // Проверка на положительное число
             if (numValue <= 0) {
                 field.classList.remove('success');
                 field.classList.add('error');
@@ -307,7 +299,6 @@
                 return false;
             }
             
-            // Проверка минимальных значений в зависимости от поля
             if (field === quantityInput && numValue < 0.1) {
                 field.classList.remove('success');
                 field.classList.add('error');
@@ -329,7 +320,6 @@
                 return false;
             }
             
-            // Проверка на целое число для баллов
             if (field === pricePointsInput && !Number.isInteger(numValue)) {
                 field.classList.remove('success');
                 field.classList.add('error');
@@ -337,7 +327,6 @@
                 return false;
             }
             
-            // Проверка на превышение максимального значения
             if (numValue > MAX_VALUE) {
                 field.classList.remove('success');
                 field.classList.add('error');
@@ -345,7 +334,6 @@
                 return false;
             }
             
-            // Если всё хорошо
             field.classList.remove('error');
             field.classList.add('success');
             showValidationResult(`Число ${numValue} корректно`);
@@ -355,15 +343,11 @@
         // Запрет ввода некорректных символов
         function preventInvalidInput(event) {
             const key = event.key;
-            
-            // Запрещаем минус
             if (key === '-') {
                 event.preventDefault();
                 showValidationResult('Отрицательные числа не допускаются!', true);
                 return;
             }
-            
-            // Запрещаем букву "e" (экспоненциальная запись)
             if (key === 'e' || key === 'E') {
                 event.preventDefault();
                 showValidationResult('Буква "e" не допускается!', true);
@@ -371,23 +355,12 @@
             }
         }
         
-        // Настройка валидации для всех числовых полей
         numberFields.forEach(field => {
-            // Запрет некорректных символов при вводе
             field.addEventListener('keydown', preventInvalidInput);
-            
-            // Валидация при изменении значения
-            field.addEventListener('input', function() {
-                validateNumberField(this);
-            });
-            
-            // Валидация при потере фокуса
-            field.addEventListener('blur', function() {
-                validateNumberField(this);
-            });
+            field.addEventListener('input', function() { validateNumberField(this); });
+            field.addEventListener('blur', function() { validateNumberField(this); });
         });
         
-        // Валидация названия товара
         nameInput.addEventListener('input', function() {
             const nameError = document.getElementById('nameError');
             if (this.value.length < 2 && this.value.length > 0) {
@@ -397,7 +370,6 @@
             }
         });
         
-        // Сброс формы
         document.getElementById('resetBtn').addEventListener('click', function() {
             form.reset();
             numberFields.forEach(field => {
@@ -419,7 +391,6 @@
                 return;
             }
             
-            // Проверка категории
             const category = document.getElementById('productCategory');
             if (!category.value) {
                 alert('Ошибка: Выберите категорию товара');
@@ -427,7 +398,6 @@
                 return;
             }
             
-            // Проверка единицы измерения
             const unit = document.getElementById('productUnit');
             if (!unit.value) {
                 alert('Ошибка: Выберите единицу измерения');
@@ -448,35 +418,41 @@
                 return;
             }
             
-            // Если всё ок - показываем результат
-            const productData = {
+            // Создание нового товара
+            const newProduct = {
+                id: Date.now(), // уникальный ID на основе времени
                 name: nameInput.value,
-                category: category.options[category.selectedIndex].text,
+                category: category.value,
                 quantity: quantityInput.value + ' ' + unit.value,
-                price: priceRubInput.value + ' ₽',
-                points: pricePointsInput.value + ' баллов',
-                date: new Date().toLocaleString('ru-RU')
+                priceRub: priceRubInput.value,
+                pricePoints: parseInt(pricePointsInput.value),
+                available: document.querySelector('input[name="availability"]:checked').value === 'yes'
             };
             
-            const message = `
-✅ Товар успешно добавлен!
-
-📋 Информация:
-• Название: ${productData.name}
-• Категория: ${productData.category}
-• Количество: ${productData.quantity}
-• Цена: ${productData.price}
-• Стоимость в баллах: ${productData.points}
-• Дата добавления: ${productData.date}
-
-Возвращаемся в админ-панель...
-            `;
+            // Получаем текущие товары из localStorage
+            let products = [];
+            const stored = localStorage.getItem('products');
+            if (stored) {
+                products = JSON.parse(stored);
+            } else {
+                // Если хранилище пусто, создаём базовый список
+                products = [
+                    { id: 1, name: 'Капучино', category: 'Напитки', quantity: '300 мл', priceRub: '250.00', pricePoints: 25, available: true },
+                    { id: 2, name: 'Латте', category: 'Напитки', quantity: '400 мл', priceRub: '280.00', pricePoints: 28, available: true },
+                    { id: 3, name: 'Экспрессо', category: 'Напитки', quantity: '200 мл', priceRub: '200.00', pricePoints: 20, available: true },
+                    { id: 4, name: 'Чизкейк Нью-Йорк', category: 'Десерты', quantity: '150 г', priceRub: '320.00', pricePoints: 32, available: true },
+                    { id: 5, name: 'Круассан с шоколадом', category: 'Выпечка', quantity: '120 г', priceRub: '180.00', pricePoints: 18, available: true }
+                ];
+            }
             
-            alert(message);
+            // Добавляем новый товар
+            products.push(newProduct);
+            localStorage.setItem('products', JSON.stringify(products));
+            
+            alert(`✅ Товар "${newProduct.name}" успешно добавлен в меню!`);
             window.location.href = 'admin.html';
         });
         
-        // Показываем инструкцию при загрузке
         showValidationResult('Введите данные в форму. Попробуйте нарушить правила валидации!');
     </script>
 </body>
