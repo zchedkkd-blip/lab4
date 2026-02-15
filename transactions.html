@@ -17,9 +17,13 @@
     </style>
 </head>
 <body>
+    <!-- Навигация -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container">
-            <a class="navbar-brand" href="#"><i class="bi bi-arrow-left-right"></i> Транзакции</a>
+            <div class="d-flex align-items-center">
+                <a href="admin.html" class="btn btn-outline-light btn-sm me-3"><i class="bi bi-house-door"></i> Главная</a>
+                <a class="navbar-brand" href="#"><i class="bi bi-arrow-left-right"></i> Транзакции</a>
+            </div>
             <div class="navbar-nav ms-auto">
                 <button class="btn btn-danger btn-sm" id="logoutBtn"><i class="bi bi-box-arrow-right"></i> Выйти</button>
             </div>
@@ -28,14 +32,18 @@
 
     <div class="container-fluid mt-4">
         <div class="row">
-            <!-- Боковое меню (заполняется скриптом) -->
+            <!-- Боковое меню -->
             <div class="col-lg-2 mb-4">
                 <div class="card">
-                    <div class="card-header bg-primary text-white"><h6 class="mb-0"><i class="bi bi-menu-button"></i> Меню</h6></div>
+                    <div class="card-header bg-primary text-white">
+                        <h6 class="mb-0"><i class="bi bi-menu-button"></i> Меню</h6>
+                    </div>
                     <div class="list-group list-group-flush" id="sidebar"></div>
                 </div>
                 <div class="card mt-3">
-                    <div class="card-header bg-info text-white"><h6 class="mb-0">Статистика</h6></div>
+                    <div class="card-header bg-info text-white">
+                        <h6 class="mb-0">Статистика</h6>
+                    </div>
                     <div class="card-body">
                         <div><small>Всего транзакций:</small> <h5>1248</h5></div>
                     </div>
@@ -74,13 +82,15 @@
         </div>
     </div>
 
-    <footer class="mt-5 py-3 bg-dark text-white text-center"><small>Колледж Метростроя | Аушакимов Илья, группа 38</small></footer>
+    <footer class="mt-5 py-3 bg-dark text-white text-center">
+        <small>Колледж Метростроя | Аушакимов Илья, группа 38</small>
+    </footer>
 
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         const role = localStorage.getItem('userRole');
         if (!role) window.location.href = 'index.html';
 
-        // Построение меню (одинаково для всех страниц)
         const menuItems = [
             { href: 'admin.html', icon: 'bi-cup-straw', text: 'Меню кафе' },
             { href: 'user_add.html', icon: 'bi-plus-circle', text: 'Добавить товар', roles: ['admin','manager'] },
@@ -88,8 +98,7 @@
             { href: 'users.html', icon: 'bi-people', text: 'Пользователи' },
             { href: 'reports.html', icon: 'bi-graph-up', text: 'Отчёты', roles: ['admin','manager'] }
         ];
-        const sidebar = document.getElementById('sidebar');
-        sidebar.innerHTML = menuItems
+        document.getElementById('sidebar').innerHTML = menuItems
             .filter(item => !item.roles || item.roles.includes(role))
             .map(item => `<a href="${item.href}" class="list-group-item list-group-item-action ${item.active ? 'active' : ''}"><i class="bi ${item.icon}"></i> ${item.text}</a>`)
             .join('');
