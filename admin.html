@@ -32,7 +32,7 @@
 
     <div class="container-fluid mt-4">
         <div class="row">
-            <!-- Боковое меню -->
+            <!-- Боковое меню (без изменений) -->
             <div class="col-lg-2 mb-4">
                 <div class="card">
                     <div class="card-header bg-primary text-white">
@@ -56,7 +56,6 @@
                         </a>
                     </div>
                 </div>
-                
                 <!-- Статистика -->
                 <div class="card mt-3">
                     <div class="card-header bg-info text-white">
@@ -65,7 +64,7 @@
                     <div class="card-body">
                         <div class="mb-2">
                             <small class="text-muted">Всего товаров:</small>
-                            <h5 class="mb-0">42</h5>
+                            <h5 class="mb-0" id="totalItems">42</h5>
                         </div>
                         <div class="mb-2">
                             <small class="text-muted">Пользователей:</small>
@@ -105,7 +104,7 @@
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
-                            <table class="table table-hover">
+                            <table class="table table-hover" id="menuTable">
                                 <thead>
                                     <tr>
                                         <th>#</th>
@@ -118,135 +117,20 @@
                                         <th>Действия</th>
                                     </tr>
                                 </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>1</td>
-                                        <td>
-                                            <i class="bi bi-cup-hot me-2"></i>
-                                            <strong>Капучино</strong>
-                                        </td>
-                                        <td><span class="badge bg-primary">Напитки</span></td>
-                                        <td>300 мл</td>
-                                        <td>250.00</td>
-                                        <td><span class="badge bg-warning">25</span></td>
-                                        <td><span class="badge bg-success">Да</span></td>
-                                        <td>
-                                            <button class="btn btn-sm btn-outline-info me-1" title="Просмотр">
-                                                <i class="bi bi-eye"></i>
-                                            </button>
-                                            <button class="btn btn-sm btn-outline-warning me-1" title="Редактировать">
-                                                <i class="bi bi-pencil"></i>
-                                            </button>
-                                            <button class="btn btn-sm btn-outline-danger" title="Удалить">
-                                                <i class="bi bi-trash"></i>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>2</td>
-                                        <td>
-                                            <i class="bi bi-cup me-2"></i>
-                                            <strong>Латте</strong>
-                                        </td>
-                                        <td><span class="badge bg-primary">Напитки</span></td>
-                                        <td>400 мл</td>
-                                        <td>280.00</td>
-                                        <td><span class="badge bg-warning">28</span></td>
-                                        <td><span class="badge bg-success">Да</span></td>
-                                        <td>
-                                            <button class="btn btn-sm btn-outline-info me-1">
-                                                <i class="bi bi-eye"></i>
-                                            </button>
-                                            <button class="btn btn-sm btn-outline-warning me-1">
-                                                <i class="bi bi-pencil"></i>
-                                            </button>
-                                            <button class="btn btn-sm btn-outline-danger">
-                                                <i class="bi bi-trash"></i>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>3</td>
-                                        <td>
-                                            <i class="bi bi-cup-straw me-2"></i>
-                                            <strong>Экспрессо</strong>
-                                        </td>
-                                        <td><span class="badge bg-primary">Напитки</span></td>
-                                        <td>200 мл</td>
-                                        <td>200.00</td>
-                                        <td><span class="badge bg-warning">20</span></td>
-                                        <td><span class="badge bg-success">Да</span></td>
-                                        <td>
-                                            <button class="btn btn-sm btn-outline-info me-1">
-                                                <i class="bi bi-eye"></i>
-                                            </button>
-                                            <button class="btn btn-sm btn-outline-warning me-1">
-                                                <i class="bi bi-pencil"></i>
-                                            </button>
-                                            <button class="btn btn-sm btn-outline-danger">
-                                                <i class="bi bi-trash"></i>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>4</td>
-                                        <td>
-                                            <i class="bi bi-cake me-2"></i>
-                                            <strong>Чизкейк Нью-Йорк</strong>
-                                        </td>
-                                        <td><span class="badge bg-success">Десерты</span></td>
-                                        <td>150 г</td>
-                                        <td>320.00</td>
-                                        <td><span class="badge bg-warning">32</span></td>
-                                        <td><span class="badge bg-success">Да</span></td>
-                                        <td>
-                                            <button class="btn btn-sm btn-outline-info me-1">
-                                                <i class="bi bi-eye"></i>
-                                            </button>
-                                            <button class="btn btn-sm btn-outline-warning me-1">
-                                                <i class="bi bi-pencil"></i>
-                                            </button>
-                                            <button class="btn btn-sm btn-outline-danger">
-                                                <i class="bi bi-trash"></i>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>5</td>
-                                        <td>
-                                            <i class="bi bi-bread-slice me-2"></i>
-                                            <strong>Круассан с шоколадом</strong>
-                                        </td>
-                                        <td><span class="badge bg-info">Выпечка</span></td>
-                                        <td>120 г</td>
-                                        <td>180.00</td>
-                                        <td><span class="badge bg-warning">18</span></td>
-                                        <td><span class="badge bg-success">Да</span></td>
-                                        <td>
-                                            <button class="btn btn-sm btn-outline-info me-1">
-                                                <i class="bi bi-eye"></i>
-                                            </button>
-                                            <button class="btn btn-sm btn-outline-warning me-1">
-                                                <i class="bi bi-pencil"></i>
-                                            </button>
-                                            <button class="btn btn-sm btn-outline-danger">
-                                                <i class="bi bi-trash"></i>
-                                            </button>
-                                        </td>
-                                    </tr>
+                                <tbody id="menuBody">
+                                    <!-- Таблица будет заполняться через JavaScript -->
                                 </tbody>
                             </table>
                         </div>
                     </div>
                     <div class="card-footer">
                         <small class="text-muted">
-                            Показано 5 из 42 товаров | Обновлено: 
-                            <span id="currentTime"></span>
+                            Обновлено: <span id="currentTime"></span>
                         </small>
                     </div>
                 </div>
 
-                <!-- Вторая таблица - транзакции -->
+                <!-- Вторая таблица - транзакции (без изменений) -->
                 <div class="card">
                     <div class="card-header bg-white">
                         <h5 class="mb-0"><i class="bi bi-arrow-left-right"></i> Последние транзакции</h5>
@@ -308,16 +192,75 @@
     </footer>
 
     <script>
-        // Обновляем время в футере таблицы
+        // Базовый список товаров (встроенные)
+        const baseProducts = [
+            { id: 1, name: 'Капучино', category: 'Напитки', quantity: '300 мл', priceRub: '250.00', pricePoints: 25, available: true },
+            { id: 2, name: 'Латте', category: 'Напитки', quantity: '400 мл', priceRub: '280.00', pricePoints: 28, available: true },
+            { id: 3, name: 'Экспрессо', category: 'Напитки', quantity: '200 мл', priceRub: '200.00', pricePoints: 20, available: true },
+            { id: 4, name: 'Чизкейк Нью-Йорк', category: 'Десерты', quantity: '150 г', priceRub: '320.00', pricePoints: 32, available: true },
+            { id: 5, name: 'Круассан с шоколадом', category: 'Выпечка', quantity: '120 г', priceRub: '180.00', pricePoints: 18, available: true }
+        ];
+
+        // Функция загрузки товаров из localStorage
+        function getProducts() {
+            const stored = localStorage.getItem('products');
+            if (stored) {
+                return JSON.parse(stored);
+            } else {
+                // Если в хранилище пусто, сохраняем базовые
+                localStorage.setItem('products', JSON.stringify(baseProducts));
+                return baseProducts;
+            }
+        }
+
+        // Функция отображения таблицы
+        function renderTable() {
+            const products = getProducts();
+            const tbody = document.getElementById('menuBody');
+            tbody.innerHTML = '';
+            products.forEach((product, index) => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${index + 1}</td>
+                    <td><i class="bi bi-cup-hot me-2"></i><strong>${product.name}</strong></td>
+                    <td><span class="badge bg-primary">${product.category}</span></td>
+                    <td>${product.quantity}</td>
+                    <td>${product.priceRub}</td>
+                    <td><span class="badge bg-warning">${product.pricePoints}</span></td>
+                    <td><span class="badge bg-success">${product.available ? 'Да' : 'Нет'}</span></td>
+                    <td>
+                        <button class="btn btn-sm btn-outline-info me-1" title="Просмотр"><i class="bi bi-eye"></i></button>
+                        <button class="btn btn-sm btn-outline-warning me-1" title="Редактировать"><i class="bi bi-pencil"></i></button>
+                        <button class="btn btn-sm btn-outline-danger" title="Удалить" onclick="deleteProduct(${product.id})"><i class="bi bi-trash"></i></button>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+            // Обновляем статистику
+            document.getElementById('totalItems').innerText = products.length;
+        }
+
+        // Функция удаления товара (для демонстрации)
+        window.deleteProduct = function(id) {
+            let products = getProducts();
+            products = products.filter(p => p.id !== id);
+            localStorage.setItem('products', JSON.stringify(products));
+            renderTable();
+        };
+
+        // Обновление времени
         function updateTime() {
             const now = new Date();
-            const timeString = now.toLocaleDateString('ru-RU') + ' ' + 
-                              now.toLocaleTimeString('ru-RU');
+            const timeString = now.toLocaleDateString('ru-RU') + ' ' + now.toLocaleTimeString('ru-RU');
             document.getElementById('currentTime').textContent = timeString;
         }
-        
-        updateTime();
-        setInterval(updateTime, 60000); // Обновлять каждую минуту
+
+        // Инициализация
+        document.addEventListener('DOMContentLoaded', function() {
+            renderTable();
+            updateTime();
+            setInterval(updateTime, 60000);
+        });
     </script>
 </body>
 </html>
