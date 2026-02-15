@@ -10,30 +10,13 @@
         body {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Segoe UI', sans-serif;
         }
-        .card {
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-            border: none;
-        }
-        .card-header {
-            background: linear-gradient(to right, #2c3e50, #4a6491);
-            border-bottom: 3px solid #ffd700;
-        }
-        .btn {
-            padding: 12px 24px;
-            border-radius: 8px;
-            font-weight: 600;
-            transition: all 0.3s;
-        }
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-        }
-        @media (max-width: 768px) {
-            .btn { width: 100%; margin-bottom: 10px; }
-        }
+        .card { border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); border: none; }
+        .card-header { background: linear-gradient(to right, #2c3e50, #4a6491); border-bottom: 3px solid #ffd700; }
+        .btn { padding: 12px 24px; border-radius: 8px; font-weight: 600; transition: all 0.3s; }
+        .btn:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        @media (max-width: 768px) { .btn { width: 100%; margin-bottom: 10px; } }
     </style>
 </head>
 <body>
@@ -42,9 +25,7 @@
             <div class="col-md-8">
                 <!-- Заголовок -->
                 <div class="text-center text-white mb-5">
-                    <h1 class="display-4 mb-3">
-                        <i class="bi bi-cup-hot"></i> Система лояльности "Кофе Хауз"
-                    </h1>
+                    <h1 class="display-4 mb-3"><i class="bi bi-cup-hot"></i> Система лояльности "Кофе Хауз"</h1>
                     <h3 class="text-warning">Лабораторная работа №4</h3>
                     <p class="lead">Внедрение информационных систем</p>
                     <p class="mb-0">Студент: Аушакимов Илья, группа 38</p>
@@ -95,8 +76,7 @@
                                 <h5 class="mb-3"><i class="bi bi-key"></i> Данные для входа:</h5>
                                 <div class="mb-3">
                                     <label for="email" class="form-label">Email адрес</label>
-                                    <input type="email" class="form-control" id="email" 
-                                           value="admin@cafe.ru" required>
+                                    <input type="email" class="form-control" id="email" value="admin@cafe.ru" required>
                                 </div>
                                 <div class="mb-3">
                                     <label for="password" class="form-label">Пароль</label>
@@ -133,13 +113,11 @@
                         </div>
                     </div>
                     <div class="card-footer text-center">
-                        <small class="text-muted">
-                            <i class="bi bi-building"></i> Колледж Метростроя Санкт-Петербург
-                        </small>
+                        <small class="text-muted"><i class="bi bi-building"></i> Колледж Метростроя Санкт-Петербург</small>
                     </div>
                 </div>
 
-                <!-- Кнопки навигации -->
+                <!-- Кнопки навигации (только для демо) -->
                 <div class="text-center">
                     <a href="admin.html" class="btn btn-success me-2 mb-2">
                         <i class="bi bi-speedometer2"></i> Перейти в админ-панель
@@ -156,13 +134,9 @@
         // Автозаполнение email при выборе роли
         document.querySelectorAll('input[name="role"]').forEach(radio => {
             radio.addEventListener('change', function() {
-                if (this.id === 'admin') {
-                    document.getElementById('email').value = 'admin@cafe.ru';
-                } else if (this.id === 'manager') {
-                    document.getElementById('email').value = 'manager@cafe.ru';
-                } else if (this.id === 'user') {
-                    document.getElementById('email').value = 'anna.p@mail.ru';
-                }
+                if (this.id === 'admin') document.getElementById('email').value = 'admin@cafe.ru';
+                else if (this.id === 'manager') document.getElementById('email').value = 'manager@cafe.ru';
+                else if (this.id === 'user') document.getElementById('email').value = 'anna.p@mail.ru';
             });
         });
 
@@ -171,7 +145,6 @@
             const emailInput = document.getElementById('email');
             const passwordInput = document.getElementById('password');
             const loginBtn = document.getElementById('loginBtn');
-            
             if (this.checked) {
                 emailInput.disabled = true;
                 passwordInput.disabled = true;
@@ -195,21 +168,24 @@
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
             const isGuest = document.getElementById('guest').checked;
-            
+
             if (isGuest) {
+                localStorage.setItem('userRole', 'guest');
                 alert('✅ Вход выполнен как гость. Перенаправление...');
-                window.location.href = 'admin.html?role=guest';
+                window.location.href = 'admin.html';
                 return;
             }
-            
+
             const users = {
-                'admin@cafe.ru': 'Opa*!g',
-                'manager@cafe.ru': 'Kla5%',
-                'anna.p@mail.ru': 'Slko4&'
+                'admin@cafe.ru': { password: 'Opa*!g', role: 'admin' },
+                'manager@cafe.ru': { password: 'Kla5%', role: 'manager' },
+                'anna.p@mail.ru': { password: 'Slko4&', role: 'user' }
             };
-            
-            if (users[email] && users[email] === password) {
-                alert('✅ Авторизация успешна! Перенаправление...');
+
+            if (users[email] && users[email].password === password) {
+                const role = users[email].role;
+                localStorage.setItem('userRole', role);
+                alert(`✅ Авторизация успешна! Добро пожаловать, ${role}.`);
                 window.location.href = 'admin.html';
             } else {
                 alert('❌ Неверный email или пароль!\n\nИспользуйте тестовые данные.');
@@ -219,9 +195,7 @@
         // Добавляем текущую дату в футер
         const date = new Date().toLocaleDateString('ru-RU');
         const footer = document.querySelector('.card-footer small');
-        if (footer) {
-            footer.innerHTML += ` | ${date}`;
-        }
+        if (footer) footer.innerHTML += ` | ${date}`;
     </script>
 </body>
 </html>
