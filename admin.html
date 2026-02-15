@@ -20,11 +20,12 @@
     <!-- Навигация -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container">
-            <a class="navbar-brand" href="#"><i class="bi bi-speedometer2"></i> Панель управления</a>
+            <div class="d-flex align-items-center">
+                <a href="admin.html" class="btn btn-outline-light btn-sm me-3"><i class="bi bi-house-door"></i> Главная</a>
+                <a class="navbar-brand" href="#"><i class="bi bi-speedometer2"></i> Панель управления</a>
+            </div>
             <div class="navbar-nav ms-auto">
-                <button class="btn btn-danger btn-sm" id="logoutBtn">
-                    <i class="bi bi-box-arrow-right"></i> Выйти
-                </button>
+                <button class="btn btn-danger btn-sm" id="logoutBtn"><i class="bi bi-box-arrow-right"></i> Выйти</button>
             </div>
         </div>
     </nav>
@@ -38,7 +39,7 @@
                         <h6 class="mb-0"><i class="bi bi-menu-button"></i> Меню</h6>
                     </div>
                     <div class="list-group list-group-flush" id="sidebar">
-                        <!-- Пункты меню будут динамически заполняться скриптом в зависимости от роли -->
+                        <!-- будет заполнено скриптом -->
                     </div>
                 </div>
                 
@@ -112,8 +113,28 @@
         </div>
     </footer>
 
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // Базовый список товаров
+        // Роль из localStorage
+        const role = localStorage.getItem('userRole');
+        if (!role) window.location.href = 'index.html';
+
+        // ---- Боковое меню ----
+        const menuItems = [
+            { href: 'admin.html', icon: 'bi-cup-straw', text: 'Меню кафе', active: true },
+            { href: 'user_add.html', icon: 'bi-plus-circle', text: 'Добавить товар', roles: ['admin','manager'] },
+            { href: 'transactions.html', icon: 'bi-arrow-left-right', text: 'Транзакции' },
+            { href: 'users.html', icon: 'bi-people', text: 'Пользователи' },
+            { href: 'reports.html', icon: 'bi-graph-up', text: 'Отчёты', roles: ['admin','manager'] }
+        ];
+
+        const sidebar = document.getElementById('sidebar');
+        sidebar.innerHTML = menuItems
+            .filter(item => !item.roles || item.roles.includes(role))
+            .map(item => `<a href="${item.href}" class="list-group-item list-group-item-action ${item.active ? 'active' : ''}"><i class="bi ${item.icon}"></i> ${item.text}</a>`)
+            .join('');
+
+        // ---- Данные товаров ----
         const baseProducts = [
             { id: 1, name: 'Капучино', category: 'Напитки', quantity: '300 мл', priceRub: '250.00', pricePoints: 25, available: true },
             { id: 2, name: 'Латте', category: 'Напитки', quantity: '400 мл', priceRub: '280.00', pricePoints: 28, available: true },
@@ -122,7 +143,6 @@
             { id: 5, name: 'Круассан с шоколадом', category: 'Выпечка', quantity: '120 г', priceRub: '180.00', pricePoints: 18, available: true }
         ];
 
-        // Получение товаров из localStorage
         function getProducts() {
             const stored = localStorage.getItem('products');
             if (stored) return JSON.parse(stored);
@@ -132,12 +152,10 @@
             }
         }
 
-        // Сохранение товаров
         function saveProducts(products) {
             localStorage.setItem('products', JSON.stringify(products));
         }
 
-        // Удаление товара
         window.deleteProduct = function(id) {
             let products = getProducts();
             products = products.filter(p => p.id !== id);
@@ -145,7 +163,6 @@
             renderTable();
         };
 
-        // Отображение таблицы
         function renderTable() {
             const products = getProducts();
             const tbody = document.getElementById('menuBody');
@@ -171,65 +188,26 @@
             document.getElementById('totalItems').innerText = products.length;
         }
 
-        // Обновление времени
         function updateTime() {
             const now = new Date();
             document.getElementById('currentTime').textContent = now.toLocaleDateString('ru-RU') + ' ' + now.toLocaleTimeString('ru-RU');
         }
 
-        // Проверка роли и настройка интерфейса
-        function setupByRole() {
-            const role = localStorage.getItem('userRole');
-            if (!role) {
-                window.location.href = 'index.html';
-                return;
-            }
-
-            // Настройка бокового меню
-            const sidebar = document.getElementById('sidebar');
-            const menuItems = [
-                { href: 'admin.html', icon: 'bi-cup-straw', text: 'Меню кафе', active: true },
-                { href: 'user_add.html', icon: 'bi-plus-circle', text: 'Добавить товар', roles: ['admin', 'manager'] },
-                { href: 'transactions.html', icon: 'bi-arrow-left-right', text: 'Транзакции' },
-                { href: 'users.html', icon: 'bi-people', text: 'Пользователи' },
-                { href: 'reports.html', icon: 'bi-graph-up', text: 'Отчёты', roles: ['admin', 'manager'] }
-            ];
-
-            sidebar.innerHTML = menuItems
-                .filter(item => !item.roles || item.roles.includes(role))
-                .map(item => `
-                    <a href="${item.href}" class="list-group-item list-group-item-action ${item.active ? 'active' : ''}">
-                        <i class="bi ${item.icon}"></i> ${item.text}
-                    </a>
-                `).join('');
-
-            // Управление видимостью кнопки "Добавить товар"
-            const addBtn = document.getElementById('addProductBtn');
-            if (role !== 'admin' && role !== 'manager') {
-                addBtn.style.display = 'none';
-                // Скрываем столбец действий в таблице
-                document.getElementById('actionsHeader').style.display = 'none';
-                document.querySelectorAll('.actions-cell').forEach(cell => cell.style.display = 'none');
-            } else {
-                addBtn.style.display = 'inline-block';
-                document.getElementById('actionsHeader').style.display = 'table-cell';
-                document.querySelectorAll('.actions-cell').forEach(cell => cell.style.display = 'table-cell');
-            }
+        // Управление видимостью кнопки добавления и столбца действий
+        if (role !== 'admin' && role !== 'manager') {
+            document.getElementById('addProductBtn').style.display = 'none';
+            document.getElementById('actionsHeader').style.display = 'none';
+            document.querySelectorAll('.actions-cell').forEach(cell => cell.style.display = 'none');
         }
 
-        // Выход
         document.getElementById('logoutBtn').addEventListener('click', function() {
             localStorage.removeItem('userRole');
             window.location.href = 'index.html';
         });
 
-        // Инициализация
-        document.addEventListener('DOMContentLoaded', function() {
-            setupByRole();
-            renderTable();
-            updateTime();
-            setInterval(updateTime, 60000);
-        });
+        renderTable();
+        updateTime();
+        setInterval(updateTime, 60000);
     </script>
 </body>
 </html>
