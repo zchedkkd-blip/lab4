@@ -21,371 +21,224 @@
     <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
         <div class="container">
             <a class="navbar-brand" href="#">
-                <i class="bi bi-plus-circle text-success"></i>
-                <strong>Добавление товара</strong>
+                <i class="bi bi-plus-circle text-success"></i> <strong>Добавление товара</strong>
             </a>
             <div class="navbar-nav">
-                <a href="admin.html" class="btn btn-outline-secondary btn-sm me-2">
-                    <i class="bi bi-arrow-left"></i> Назад к админке
-                </a>
-                <a href="index.html" class="btn btn-outline-danger btn-sm">
-                    <i class="bi bi-house"></i> На главную
-                </a>
+                <a href="admin.html" class="btn btn-outline-secondary btn-sm me-2"><i class="bi bi-arrow-left"></i> Назад</a>
+                <button class="btn btn-outline-danger btn-sm" id="logoutBtn"><i class="bi bi-house"></i> Выйти</button>
             </div>
         </div>
     </nav>
 
-    <div class="container py-5">
-        <div class="row justify-content-center">
-            <div class="col-lg-8">
-                <!-- Заголовок -->
-                <div class="text-center mb-5">
-                    <h1 class="display-5 mb-3">
-                        <i class="bi bi-tag text-success"></i> Добавление нового товара
-                    </h1>
-                    <p class="text-muted">
-                        Заполните форму для добавления товара в меню кафе.
-                    </p>
-                </div>
-
-                <!-- Форма -->
-                <div class="card">
-                    <div class="card-header bg-success text-white">
-                        <h4 class="mb-0"><i class="bi bi-clipboard-data"></i> Информация о товаре</h4>
-                    </div>
-                    <div class="card-body p-4">
-                        <form id="productForm">
-                            <!-- Название товара -->
-                            <div class="mb-4">
-                                <label class="form-label fw-bold">
-                                    <i class="bi bi-card-heading"></i> Название товара *
-                                </label>
-                                <input type="text" class="form-control form-control-lg" 
-                                       id="productName" placeholder="Например: Капучино" required>
-                                <div class="form-text">Минимум 2 символа</div>
-                                <div class="validation-message text-danger" id="nameError"></div>
-                            </div>
-
-                            <!-- Категория -->
-                            <div class="mb-4">
-                                <label class="form-label fw-bold">
-                                    <i class="bi bi-tags"></i> Категория *
-                                </label>
-                                <select class="form-select" id="productCategory" required>
-                                    <option value="" selected disabled>Выберите категорию</option>
-                                    <option value="Напитки">Напитки</option>
-                                    <option value="Десерты">Десерты</option>
-                                    <option value="Выпечка">Выпечка</option>
-                                    <option value="Закуски">Закуски</option>
-                                </select>
-                                <div class="validation-message text-danger" id="categoryError"></div>
-                            </div>
-
-                            <!-- Количество и единица измерения -->
-                            <div class="row mb-4">
-                                <div class="col-md-6">
-                                    <label class="form-label fw-bold">
-                                        <i class="bi bi-123"></i> Количество *
-                                    </label>
-                                    <input type="number" class="form-control positive-number" 
-                                           id="productQuantity" min="0.1" max="999999999" step="0.1" 
-                                           placeholder="Например: 300" required>
-                                    <div class="form-text">Только положительные числа (≥ 0.1, ≤ 999999999)</div>
-                                    <div class="validation-message text-danger" id="quantityError"></div>
-                                </div>
-                                <div class="col-md-6">
-                                    <label class="form-label fw-bold">
-                                        <i class="bi bi-rulers"></i> Единица измерения *
-                                    </label>
-                                    <select class="form-select" id="productUnit" required>
-                                        <option value="" selected disabled>Выберите единицу</option>
-                                        <option value="мл">мл</option>
-                                        <option value="г">г</option>
-                                        <option value="шт">шт.</option>
-                                        <option value="порция">порция</option>
-                                    </select>
-                                    <div class="validation-message text-danger" id="unitError"></div>
-                                </div>
-                            </div>
-
-                            <!-- Цены -->
-                            <div class="row mb-4">
-                                <div class="col-md-6">
-                                    <label class="form-label fw-bold">
-                                        <i class="bi bi-currency-ruble"></i> Стоимость в рублях *
-                                    </label>
-                                    <div class="input-group">
-                                        <input type="number" class="form-control positive-number" 
-                                               id="productPriceRub" min="0.01" max="999999999" step="0.01" 
-                                               placeholder="Например: 250.00" required>
-                                        <span class="input-group-text">₽</span>
-                                    </div>
-                                    <div class="form-text">Только положительные числа (≥ 0.01, ≤ 999999999)</div>
-                                    <div class="validation-message text-danger" id="priceRubError"></div>
-                                </div>
-                                <div class="col-md-6">
-                                    <label class="form-label fw-bold">
-                                        <i class="bi bi-star"></i> Стоимость в баллах *
-                                    </label>
-                                    <div class="input-group">
-                                        <input type="number" class="form-control positive-number" 
-                                               id="productPricePoints" min="1" max="999999999" step="1" 
-                                               placeholder="Например: 25" required>
-                                        <span class="input-group-text">баллов</span>
-                                    </div>
-                                    <div class="form-text">Только целые положительные числа (≥ 1, ≤ 999999999)</div>
-                                    <div class="validation-message text-danger" id="pricePointsError"></div>
-                                </div>
-                            </div>
-
-                            <!-- Доступность -->
-                            <div class="mb-4">
-                                <label class="form-label fw-bold">
-                                    <i class="bi bi-toggle-on"></i> Доступность товара
-                                </label>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="availability" 
-                                           id="availableYes" value="yes" checked>
-                                    <label class="form-check-label" for="availableYes">
-                                        <span class="badge bg-success">Доступен</span> - товар отображается в меню
-                                    </label>
-                                </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="availability" 
-                                           id="availableNo" value="no">
-                                    <label class="form-check-label" for="availableNo">
-                                        <span class="badge bg-danger">Недоступен</span> - временно отсутствует
-                                    </label>
-                                </div>
-                            </div>
-
-                            <!-- Описание (необязательно) -->
-                            <div class="mb-4">
-                                <label class="form-label fw-bold">
-                                    <i class="bi bi-text-paragraph"></i> Описание (необязательно)
-                                </label>
-                                <textarea class="form-control" id="productDescription" 
-                                          rows="3" placeholder="Дополнительная информация о товаре..."></textarea>
-                            </div>
-
-                            <!-- Кнопки -->
-                            <div class="d-flex justify-content-between mt-4">
-                                <button type="button" class="btn btn-secondary" id="resetBtn">
-                                    <i class="bi bi-arrow-clockwise"></i> Сбросить форму
-                                </button>
-                                <div>
-                                    <a href="admin.html" class="btn btn-outline-danger me-2">
-                                        <i class="bi bi-x-circle"></i> Отмена
-                                    </a>
-                                    <button type="submit" class="btn btn-success" id="submitBtn">
-                                        <i class="bi bi-check-circle"></i> Добавить товар
-                                    </button>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                    <div class="card-footer">
-                        <small class="text-muted">
-                            <i class="bi bi-info-circle"></i> Поля, отмеченные *, обязательны для заполнения.
-                        </small>
-                    </div>
-                </div>
-            </div>
-        </div>
+    <div class="container py-5" id="mainContent">
+        <!-- Здесь будет форма, если есть доступ -->
     </div>
 
     <!-- Футер -->
     <footer class="mt-5 py-3 bg-dark text-white">
         <div class="container text-center">
-            <small>
-                <i class="bi bi-building"></i> Колледж Метростроя Санкт-Петербург |
-                Студент: Аушакимов Илья, группа 38 |
-                Лабораторная работа №4 | Валидация положительных чисел
-            </small>
+            <small><i class="bi bi-building"></i> Колледж Метростроя Санкт-Петербург | Студент: Аушакимов Илья, группа 38 | Лабораторная работа №4</small>
         </div>
     </footer>
 
     <script>
-        // Элементы формы
-        const form = document.getElementById('productForm');
-        const nameInput = document.getElementById('productName');
-        const quantityInput = document.getElementById('productQuantity');
-        const priceRubInput = document.getElementById('productPriceRub');
-        const pricePointsInput = document.getElementById('productPricePoints');
-        
-        // Максимально допустимое значение (можно настроить)
-        const MAX_VALUE = 999999999;
-        
-        // Список числовых полей для валидации
-        const numberFields = [quantityInput, priceRubInput, pricePointsInput];
-        
-        // Валидация одного числового поля
-        function validateNumberField(field) {
-            const value = field.value.trim();
-            
-            if (!value) {
-                field.classList.remove('success', 'error');
-                return false;
-            }
-            
-            const numValue = parseFloat(value);
-            if (isNaN(numValue)) {
-                field.classList.remove('success');
-                field.classList.add('error');
-                return false;
-            }
-            
-            if (!isFinite(numValue)) {
-                field.classList.remove('success');
-                field.classList.add('error');
-                return false;
-            }
-            
-            if (numValue <= 0) {
-                field.classList.remove('success');
-                field.classList.add('error');
-                return false;
-            }
-            
-            if (field === quantityInput && numValue < 0.1) {
-                field.classList.remove('success');
-                field.classList.add('error');
-                return false;
-            }
-            
-            if (field === priceRubInput && numValue < 0.01) {
-                field.classList.remove('success');
-                field.classList.add('error');
-                return false;
-            }
-            
-            if (field === pricePointsInput && numValue < 1) {
-                field.classList.remove('success');
-                field.classList.add('error');
-                return false;
-            }
-            
-            if (field === pricePointsInput && !Number.isInteger(numValue)) {
-                field.classList.remove('success');
-                field.classList.add('error');
-                return false;
-            }
-            
-            if (numValue > MAX_VALUE) {
-                field.classList.remove('success');
-                field.classList.add('error');
-                return false;
-            }
-            
-            field.classList.remove('error');
-            field.classList.add('success');
-            return true;
-        }
-        
-        // Запрет ввода некорректных символов
-        function preventInvalidInput(event) {
-            const key = event.key;
-            if (key === '-') {
-                event.preventDefault();
-                return;
-            }
-            if (key === 'e' || key === 'E') {
-                event.preventDefault();
-                return;
-            }
-        }
-        
-        numberFields.forEach(field => {
-            field.addEventListener('keydown', preventInvalidInput);
-            field.addEventListener('input', function() { validateNumberField(this); });
-            field.addEventListener('blur', function() { validateNumberField(this); });
-        });
-        
-        nameInput.addEventListener('input', function() {
-            const nameError = document.getElementById('nameError');
-            if (this.value.length < 2 && this.value.length > 0) {
-                nameError.textContent = 'Название должно содержать минимум 2 символа';
-            } else {
-                nameError.textContent = '';
-            }
-        });
-        
-        document.getElementById('resetBtn').addEventListener('click', function() {
-            form.reset();
-            numberFields.forEach(field => {
-                field.classList.remove('success', 'error');
-            });
-        });
-        
-        // Отправка формы
-        form.addEventListener('submit', function(event) {
-            event.preventDefault();
-            
-            // Проверка названия
-            if (nameInput.value.length < 2) {
-                alert('Ошибка: Название товара должно содержать минимум 2 символа');
-                nameInput.focus();
-                return;
-            }
-            
-            const category = document.getElementById('productCategory');
-            if (!category.value) {
-                alert('Ошибка: Выберите категорию товара');
-                category.focus();
-                return;
-            }
-            
-            const unit = document.getElementById('productUnit');
-            if (!unit.value) {
-                alert('Ошибка: Выберите единицу измерения');
-                unit.focus();
-                return;
-            }
-            
-            // Проверка всех числовых полей
-            let allValid = true;
-            numberFields.forEach(field => {
-                if (!validateNumberField(field)) {
-                    allValid = false;
-                }
-            });
-            
-            if (!allValid) {
-                alert('Ошибка: Проверьте числовые поля. Все значения должны быть положительными и не превышать допустимый предел.');
-                return;
-            }
-            
-            // Создание нового товара
-            const newProduct = {
-                id: Date.now(),
-                name: nameInput.value,
-                category: category.value,
-                quantity: quantityInput.value + ' ' + unit.value,
-                priceRub: priceRubInput.value,
-                pricePoints: parseInt(pricePointsInput.value),
-                available: document.querySelector('input[name="availability"]:checked').value === 'yes'
-            };
-            
-            // Получаем текущие товары из localStorage
-            let products = [];
-            const stored = localStorage.getItem('products');
-            if (stored) {
-                products = JSON.parse(stored);
-            } else {
-                products = [
-                    { id: 1, name: 'Капучино', category: 'Напитки', quantity: '300 мл', priceRub: '250.00', pricePoints: 25, available: true },
-                    { id: 2, name: 'Латте', category: 'Напитки', quantity: '400 мл', priceRub: '280.00', pricePoints: 28, available: true },
-                    { id: 3, name: 'Экспрессо', category: 'Напитки', quantity: '200 мл', priceRub: '200.00', pricePoints: 20, available: true },
-                    { id: 4, name: 'Чизкейк Нью-Йорк', category: 'Десерты', quantity: '150 г', priceRub: '320.00', pricePoints: 32, available: true },
-                    { id: 5, name: 'Круассан с шоколадом', category: 'Выпечка', quantity: '120 г', priceRub: '180.00', pricePoints: 18, available: true }
-                ];
-            }
-            
-            products.push(newProduct);
-            localStorage.setItem('products', JSON.stringify(products));
-            
-            alert(`✅ Товар "${newProduct.name}" успешно добавлен в меню!`);
+        // Проверка роли
+        const role = localStorage.getItem('userRole');
+        if (!role) {
+            window.location.href = 'index.html';
+        } else if (role !== 'admin' && role !== 'manager') {
+            alert('❌ У вас нет прав на добавление товаров.');
             window.location.href = 'admin.html';
+        } else {
+            // Отображаем форму
+            document.getElementById('mainContent').innerHTML = `
+                <div class="row justify-content-center">
+                    <div class="col-lg-8">
+                        <div class="text-center mb-5">
+                            <h1 class="display-5 mb-3"><i class="bi bi-tag text-success"></i> Добавление нового товара</h1>
+                            <p class="text-muted">Заполните форму для добавления товара в меню кафе.</p>
+                        </div>
+                        <div class="card">
+                            <div class="card-header bg-success text-white">
+                                <h4 class="mb-0"><i class="bi bi-clipboard-data"></i> Информация о товаре</h4>
+                            </div>
+                            <div class="card-body p-4">
+                                <form id="productForm">
+                                    <!-- Название товара -->
+                                    <div class="mb-4">
+                                        <label class="form-label fw-bold"><i class="bi bi-card-heading"></i> Название товара *</label>
+                                        <input type="text" class="form-control form-control-lg" id="productName" placeholder="Например: Капучино" required>
+                                        <div class="form-text">Минимум 2 символа</div>
+                                        <div class="validation-message text-danger" id="nameError"></div>
+                                    </div>
+                                    <!-- Категория -->
+                                    <div class="mb-4">
+                                        <label class="form-label fw-bold"><i class="bi bi-tags"></i> Категория *</label>
+                                        <select class="form-select" id="productCategory" required>
+                                            <option value="" selected disabled>Выберите категорию</option>
+                                            <option value="Напитки">Напитки</option>
+                                            <option value="Десерты">Десерты</option>
+                                            <option value="Выпечка">Выпечка</option>
+                                            <option value="Закуски">Закуски</option>
+                                        </select>
+                                        <div class="validation-message text-danger" id="categoryError"></div>
+                                    </div>
+                                    <!-- Количество и единица -->
+                                    <div class="row mb-4">
+                                        <div class="col-md-6">
+                                            <label class="form-label fw-bold"><i class="bi bi-123"></i> Количество *</label>
+                                            <input type="number" class="form-control positive-number" id="productQuantity" min="0.1" max="999999999" step="0.1" placeholder="300" required>
+                                            <div class="form-text">≥ 0.1, ≤ 999999999</div>
+                                            <div class="validation-message text-danger" id="quantityError"></div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label fw-bold"><i class="bi bi-rulers"></i> Единица измерения *</label>
+                                            <select class="form-select" id="productUnit" required>
+                                                <option value="" selected disabled>Выберите единицу</option>
+                                                <option value="мл">мл</option>
+                                                <option value="г">г</option>
+                                                <option value="шт">шт.</option>
+                                                <option value="порция">порция</option>
+                                            </select>
+                                            <div class="validation-message text-danger" id="unitError"></div>
+                                        </div>
+                                    </div>
+                                    <!-- Цены -->
+                                    <div class="row mb-4">
+                                        <div class="col-md-6">
+                                            <label class="form-label fw-bold"><i class="bi bi-currency-ruble"></i> Цена в рублях *</label>
+                                            <div class="input-group">
+                                                <input type="number" class="form-control positive-number" id="productPriceRub" min="0.01" max="999999999" step="0.01" placeholder="250.00" required>
+                                                <span class="input-group-text">₽</span>
+                                            </div>
+                                            <div class="form-text">≥ 0.01, ≤ 999999999</div>
+                                            <div class="validation-message text-danger" id="priceRubError"></div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label fw-bold"><i class="bi bi-star"></i> Цена в баллах *</label>
+                                            <div class="input-group">
+                                                <input type="number" class="form-control positive-number" id="productPricePoints" min="1" max="999999999" step="1" placeholder="25" required>
+                                                <span class="input-group-text">баллов</span>
+                                            </div>
+                                            <div class="form-text">Целое ≥ 1, ≤ 999999999</div>
+                                            <div class="validation-message text-danger" id="pricePointsError"></div>
+                                        </div>
+                                    </div>
+                                    <!-- Доступность -->
+                                    <div class="mb-4">
+                                        <label class="form-label fw-bold"><i class="bi bi-toggle-on"></i> Доступность</label>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="availability" id="availableYes" value="yes" checked>
+                                            <label class="form-check-label" for="availableYes"><span class="badge bg-success">Доступен</span></label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="availability" id="availableNo" value="no">
+                                            <label class="form-check-label" for="availableNo"><span class="badge bg-danger">Недоступен</span></label>
+                                        </div>
+                                    </div>
+                                    <!-- Описание -->
+                                    <div class="mb-4">
+                                        <label class="form-label fw-bold"><i class="bi bi-text-paragraph"></i> Описание (необязательно)</label>
+                                        <textarea class="form-control" id="productDescription" rows="3" placeholder="Дополнительная информация..."></textarea>
+                                    </div>
+                                    <!-- Кнопки -->
+                                    <div class="d-flex justify-content-between mt-4">
+                                        <button type="button" class="btn btn-secondary" id="resetBtn"><i class="bi bi-arrow-clockwise"></i> Сбросить</button>
+                                        <div>
+                                            <a href="admin.html" class="btn btn-outline-danger me-2"><i class="bi bi-x-circle"></i> Отмена</a>
+                                            <button type="submit" class="btn btn-success" id="submitBtn"><i class="bi bi-check-circle"></i> Добавить товар</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // ---- Логика валидации и отправки (как в предыдущем коде) ----
+            const form = document.getElementById('productForm');
+            const nameInput = document.getElementById('productName');
+            const quantityInput = document.getElementById('productQuantity');
+            const priceRubInput = document.getElementById('productPriceRub');
+            const pricePointsInput = document.getElementById('productPricePoints');
+            const MAX_VALUE = 999999999;
+            const numberFields = [quantityInput, priceRubInput, pricePointsInput];
+
+            function validateNumberField(field) {
+                const value = field.value.trim();
+                if (!value) {
+                    field.classList.remove('success', 'error');
+                    return false;
+                }
+                const numValue = parseFloat(value);
+                if (isNaN(numValue) || !isFinite(numValue) || numValue <= 0) {
+                    field.classList.remove('success');
+                    field.classList.add('error');
+                    return false;
+                }
+                if (field === quantityInput && numValue < 0.1) { field.classList.add('error'); return false; }
+                if (field === priceRubInput && numValue < 0.01) { field.classList.add('error'); return false; }
+                if (field === pricePointsInput && (numValue < 1 || !Number.isInteger(numValue))) { field.classList.add('error'); return false; }
+                if (numValue > MAX_VALUE) { field.classList.add('error'); return false; }
+                field.classList.remove('error');
+                field.classList.add('success');
+                return true;
+            }
+
+            function preventInvalidInput(e) {
+                if (e.key === '-' || e.key === 'e' || e.key === 'E') e.preventDefault();
+            }
+
+            numberFields.forEach(f => {
+                f.addEventListener('keydown', preventInvalidInput);
+                f.addEventListener('input', function() { validateNumberField(this); });
+                f.addEventListener('blur', function() { validateNumberField(this); });
+            });
+
+            nameInput.addEventListener('input', function() {
+                const err = document.getElementById('nameError');
+                err.textContent = (this.value.length < 2 && this.value.length > 0) ? 'Минимум 2 символа' : '';
+            });
+
+            document.getElementById('resetBtn').addEventListener('click', function() {
+                form.reset();
+                numberFields.forEach(f => f.classList.remove('success', 'error'));
+            });
+
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                if (nameInput.value.length < 2) { alert('Название должно содержать минимум 2 символа'); return; }
+                const category = document.getElementById('productCategory');
+                if (!category.value) { alert('Выберите категорию'); return; }
+                const unit = document.getElementById('productUnit');
+                if (!unit.value) { alert('Выберите единицу измерения'); return; }
+                let allValid = true;
+                numberFields.forEach(f => { if (!validateNumberField(f)) allValid = false; });
+                if (!allValid) { alert('Проверьте числовые поля'); return; }
+
+                const newProduct = {
+                    id: Date.now(),
+                    name: nameInput.value,
+                    category: category.value,
+                    quantity: quantityInput.value + ' ' + unit.value,
+                    priceRub: priceRubInput.value,
+                    pricePoints: parseInt(pricePointsInput.value),
+                    available: document.querySelector('input[name="availability"]:checked').value === 'yes'
+                };
+
+                let products = JSON.parse(localStorage.getItem('products')) || [];
+                products.push(newProduct);
+                localStorage.setItem('products', JSON.stringify(products));
+                alert('✅ Товар успешно добавлен!');
+                window.location.href = 'admin.html';
+            });
+        }
+
+        // Кнопка выхода
+        document.getElementById('logoutBtn').addEventListener('click', function() {
+            localStorage.removeItem('userRole');
+            window.location.href = 'index.html';
         });
     </script>
 </body>
