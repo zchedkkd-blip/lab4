@@ -46,7 +46,7 @@
                     <p class="text-muted">
                         Заполните форму для добавления товара в меню кафе.
                         <br>
-                        <strong>Внимание:</strong> Числовые поля принимают только положительные значения.
+                        <strong>Внимание:</strong> Числовые поля принимают только положительные числа.
                     </p>
                 </div>
 
@@ -89,10 +89,11 @@
                                     <label class="form-label fw-bold">
                                         <i class="bi bi-123"></i> Количество *
                                     </label>
+                                    <!-- Добавлен атрибут max -->
                                     <input type="number" class="form-control positive-number" 
-                                           id="productQuantity" min="0.1" step="0.1" 
+                                           id="productQuantity" min="0.1" max="999999999" step="0.1" 
                                            placeholder="Например: 300" required>
-                                    <div class="form-text">Только положительные числа (≥ 0.1)</div>
+                                    <div class="form-text">Только положительные числа (≥ 0.1, ≤ 999999999)</div>
                                     <div class="validation-message text-danger" id="quantityError"></div>
                                 </div>
                                 <div class="col-md-6">
@@ -117,12 +118,13 @@
                                         <i class="bi bi-currency-ruble"></i> Стоимость в рублях *
                                     </label>
                                     <div class="input-group">
+                                        <!-- Добавлен атрибут max -->
                                         <input type="number" class="form-control positive-number" 
-                                               id="productPriceRub" min="0.01" step="0.01" 
+                                               id="productPriceRub" min="0.01" max="999999999" step="0.01" 
                                                placeholder="Например: 250.00" required>
                                         <span class="input-group-text">₽</span>
                                     </div>
-                                    <div class="form-text">Только положительные числа (≥ 0.01)</div>
+                                    <div class="form-text">Только положительные числа (≥ 0.01, ≤ 999999999)</div>
                                     <div class="validation-message text-danger" id="priceRubError"></div>
                                 </div>
                                 <div class="col-md-6">
@@ -130,12 +132,13 @@
                                         <i class="bi bi-star"></i> Стоимость в баллах *
                                     </label>
                                     <div class="input-group">
+                                        <!-- Добавлен атрибут max -->
                                         <input type="number" class="form-control positive-number" 
-                                               id="productPricePoints" min="1" step="1" 
+                                               id="productPricePoints" min="1" max="999999999" step="1" 
                                                placeholder="Например: 25" required>
                                         <span class="input-group-text">баллов</span>
                                     </div>
-                                    <div class="form-text">Только целые положительные числа (≥ 1)</div>
+                                    <div class="form-text">Только целые положительные числа (≥ 1, ≤ 999999999)</div>
                                     <div class="validation-message text-danger" id="pricePointsError"></div>
                                 </div>
                             </div>
@@ -182,6 +185,8 @@
                                     <br>
                                     • Букву "e"
                                     <br>
+                                    • Очень большое число (больше 999999999)
+                                    <br>
                                     Система не пропустит некорректные значения!
                                 </p>
                                 <div class="validation-message" id="validationResult"></div>
@@ -223,6 +228,7 @@
                             <li>Нельзя ввести отрицательное число (например: -10)</li>
                             <li>Нельзя ввести ноль (0) в эти поля</li>
                             <li>Нельзя ввести букву "e" (экспоненциальная запись запрещена)</li>
+                            <li>Нельзя ввести число больше 999 999 999</li>
                             <li>Минимальные значения: количество ≥ 0.1, цена ≥ 0.01, баллы ≥ 1</li>
                         </ul>
                         <p class="mb-0">Попробуйте нарушить правила - форма не позволит отправить некорректные данные!</p>
@@ -253,6 +259,9 @@
         const validationResult = document.getElementById('validationResult');
         const validationDemo = document.getElementById('validationDemo');
         
+        // Максимально допустимое значение (можно настроить)
+        const MAX_VALUE = 999999999;
+        
         // Список числовых полей для валидации
         const numberFields = [quantityInput, priceRubInput, pricePointsInput];
         
@@ -279,6 +288,14 @@
                 field.classList.remove('success');
                 field.classList.add('error');
                 showValidationResult(`"${value}" не является числом`, true);
+                return false;
+            }
+            
+            // Проверка на бесконечность (слишком большое число)
+            if (!isFinite(numValue)) {
+                field.classList.remove('success');
+                field.classList.add('error');
+                showValidationResult(`Число слишком большое (выходит за пределы)`, true);
                 return false;
             }
             
@@ -317,6 +334,14 @@
                 field.classList.remove('success');
                 field.classList.add('error');
                 showValidationResult(`Баллы должны быть целым числом`, true);
+                return false;
+            }
+            
+            // Проверка на превышение максимального значения
+            if (numValue > MAX_VALUE) {
+                field.classList.remove('success');
+                field.classList.add('error');
+                showValidationResult(`Число не должно превышать ${MAX_VALUE}`, true);
                 return false;
             }
             
@@ -415,12 +440,11 @@
             numberFields.forEach(field => {
                 if (!validateNumberField(field)) {
                     allValid = false;
-                    field.focus();
                 }
             });
             
             if (!allValid) {
-                alert('Ошибка: Проверьте числовые поля. Все значения должны быть положительными.');
+                alert('Ошибка: Проверьте числовые поля. Все значения должны быть положительными и не превышать допустимый предел.');
                 return;
             }
             
