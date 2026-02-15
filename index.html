@@ -219,7 +219,9 @@
         // Добавляем текущую дату в футер
         const date = new Date().toLocaleDateString('ru-RU');
         const footer = document.querySelector('.card-footer small');
-        footer.innerHTML += ` | ${date}`;
+        if (footer) {
+            footer.innerHTML += ` | ${date}`;
+        }
     </script>
 </body>
 </html>
