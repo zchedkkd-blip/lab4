@@ -32,7 +32,7 @@
 
     <div class="container-fluid mt-4">
         <div class="row">
-            <!-- Боковое меню (без изменений) -->
+            <!-- Боковое меню -->
             <div class="col-lg-2 mb-4">
                 <div class="card">
                     <div class="card-header bg-primary text-white">
@@ -56,6 +56,7 @@
                         </a>
                     </div>
                 </div>
+                
                 <!-- Статистика -->
                 <div class="card mt-3">
                     <div class="card-header bg-info text-white">
@@ -64,7 +65,7 @@
                     <div class="card-body">
                         <div class="mb-2">
                             <small class="text-muted">Всего товаров:</small>
-                            <h5 class="mb-0" id="totalItems">42</h5>
+                            <h5 class="mb-0" id="totalItems">0</h5>
                         </div>
                         <div class="mb-2">
                             <small class="text-muted">Пользователей:</small>
@@ -118,7 +119,7 @@
                                     </tr>
                                 </thead>
                                 <tbody id="menuBody">
-                                    <!-- Таблица будет заполняться через JavaScript -->
+                                    <!-- Таблица будет заполнена через JavaScript -->
                                 </tbody>
                             </table>
                         </div>
@@ -130,7 +131,7 @@
                     </div>
                 </div>
 
-                <!-- Вторая таблица - транзакции (без изменений) -->
+                <!-- Вторая таблица - транзакции -->
                 <div class="card">
                     <div class="card-header bg-white">
                         <h5 class="mb-0"><i class="bi bi-arrow-left-right"></i> Последние транзакции</h5>
@@ -201,19 +202,32 @@
             { id: 5, name: 'Круассан с шоколадом', category: 'Выпечка', quantity: '120 г', priceRub: '180.00', pricePoints: 18, available: true }
         ];
 
-        // Функция загрузки товаров из localStorage
+        // Получение товаров из localStorage
         function getProducts() {
             const stored = localStorage.getItem('products');
             if (stored) {
                 return JSON.parse(stored);
             } else {
-                // Если в хранилище пусто, сохраняем базовые
+                // Если нет, инициализируем базовыми
                 localStorage.setItem('products', JSON.stringify(baseProducts));
                 return baseProducts;
             }
         }
 
-        // Функция отображения таблицы
+        // Сохранение товаров в localStorage
+        function saveProducts(products) {
+            localStorage.setItem('products', JSON.stringify(products));
+        }
+
+        // Удаление товара по ID
+        function deleteProduct(id) {
+            let products = getProducts();
+            products = products.filter(p => p.id !== id);
+            saveProducts(products);
+            renderTable(); // перерисовать таблицу
+        }
+
+        // Отображение таблицы
         function renderTable() {
             const products = getProducts();
             const tbody = document.getElementById('menuBody');
@@ -227,10 +241,10 @@
                     <td>${product.quantity}</td>
                     <td>${product.priceRub}</td>
                     <td><span class="badge bg-warning">${product.pricePoints}</span></td>
-                    <td><span class="badge bg-success">${product.available ? 'Да' : 'Нет'}</span></td>
+                    <td><span class="badge bg-${product.available ? 'success' : 'danger'}">${product.available ? 'Да' : 'Нет'}</span></td>
                     <td>
-                        <button class="btn btn-sm btn-outline-info me-1" title="Просмотр"><i class="bi bi-eye"></i></button>
-                        <button class="btn btn-sm btn-outline-warning me-1" title="Редактировать"><i class="bi bi-pencil"></i></button>
+                        <button class="btn btn-sm btn-outline-info me-1" title="Просмотр" onclick="alert('Просмотр товара: ${product.name}')"><i class="bi bi-eye"></i></button>
+                        <button class="btn btn-sm btn-outline-warning me-1" title="Редактировать" onclick="alert('Редактирование пока не реализовано')"><i class="bi bi-pencil"></i></button>
                         <button class="btn btn-sm btn-outline-danger" title="Удалить" onclick="deleteProduct(${product.id})"><i class="bi bi-trash"></i></button>
                     </td>
                 `;
@@ -240,14 +254,6 @@
             document.getElementById('totalItems').innerText = products.length;
         }
 
-        // Функция удаления товара (для демонстрации)
-        window.deleteProduct = function(id) {
-            let products = getProducts();
-            products = products.filter(p => p.id !== id);
-            localStorage.setItem('products', JSON.stringify(products));
-            renderTable();
-        };
-
         // Обновление времени
         function updateTime() {
             const now = new Date();
@@ -255,12 +261,15 @@
             document.getElementById('currentTime').textContent = timeString;
         }
 
-        // Инициализация
+        // Инициализация при загрузке страницы
         document.addEventListener('DOMContentLoaded', function() {
             renderTable();
             updateTime();
             setInterval(updateTime, 60000);
         });
+
+        // Делаем функцию deleteProduct глобальной, чтобы она была доступна из onclick
+        window.deleteProduct = deleteProduct;
     </script>
 </body>
 </html>
