@@ -17,65 +17,27 @@
     </style>
 </head>
 <body>
-    <!-- Навигация -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container">
-            <a class="navbar-brand" href="#">
-                <i class="bi bi-arrow-left-right"></i> Транзакции
-            </a>
+            <a class="navbar-brand" href="#"><i class="bi bi-arrow-left-right"></i> Транзакции</a>
             <div class="navbar-nav ms-auto">
-                <a href="index.html" class="btn btn-danger btn-sm">
-                    <i class="bi bi-box-arrow-right"></i> Выйти
-                </a>
+                <button class="btn btn-danger btn-sm" id="logoutBtn"><i class="bi bi-box-arrow-right"></i> Выйти</button>
             </div>
         </div>
     </nav>
 
     <div class="container-fluid mt-4">
         <div class="row">
-            <!-- Боковое меню -->
+            <!-- Боковое меню (заполняется скриптом) -->
             <div class="col-lg-2 mb-4">
                 <div class="card">
-                    <div class="card-header bg-primary text-white">
-                        <h6 class="mb-0"><i class="bi bi-menu-button"></i> Меню</h6>
-                    </div>
-                    <div class="list-group list-group-flush">
-                        <a href="admin.html" class="list-group-item list-group-item-action">
-                            <i class="bi bi-cup-straw"></i> Меню кафе
-                        </a>
-                        <a href="user_add.html" class="list-group-item list-group-item-action">
-                            <i class="bi bi-plus-circle"></i> Добавить товар
-                        </a>
-                        <a href="transactions.html" class="list-group-item list-group-item-action active">
-                            <i class="bi bi-arrow-left-right"></i> Транзакции
-                        </a>
-                        <a href="users.html" class="list-group-item list-group-item-action">
-                            <i class="bi bi-people"></i> Пользователи
-                        </a>
-                        <a href="reports.html" class="list-group-item list-group-item-action">
-                            <i class="bi bi-graph-up"></i> Отчёты
-                        </a>
-                    </div>
+                    <div class="card-header bg-primary text-white"><h6 class="mb-0"><i class="bi bi-menu-button"></i> Меню</h6></div>
+                    <div class="list-group list-group-flush" id="sidebar"></div>
                 </div>
-                
-                <!-- Статистика (простая) -->
                 <div class="card mt-3">
-                    <div class="card-header bg-info text-white">
-                        <h6 class="mb-0"><i class="bi bi-bar-chart"></i> Статистика</h6>
-                    </div>
+                    <div class="card-header bg-info text-white"><h6 class="mb-0">Статистика</h6></div>
                     <div class="card-body">
-                        <div class="mb-2">
-                            <small class="text-muted">Всего транзакций:</small>
-                            <h5 class="mb-0" id="totalTransactions">1248</h5>
-                        </div>
-                        <div class="mb-2">
-                            <small class="text-muted">Списаний:</small>
-                            <h5 class="mb-0" id="debits">876</h5>
-                        </div>
-                        <div>
-                            <small class="text-muted">Начислений:</small>
-                            <h5 class="mb-0" id="credits">372</h5>
-                        </div>
+                        <div><small>Всего транзакций:</small> <h5>1248</h5></div>
                     </div>
                 </div>
             </div>
@@ -83,125 +45,58 @@
             <!-- Основной контент -->
             <div class="col-lg-10">
                 <div class="d-flex justify-content-between align-items-center mb-4">
-                    <div>
-                        <h2 class="mb-1"><i class="bi bi-arrow-left-right"></i> Транзакции</h2>
-                        <p class="text-muted mb-0">История операций с баллами</p>
-                    </div>
-                    <button class="btn btn-primary" onclick="alert('Функция экспорта в разработке')">
-                        <i class="bi bi-download"></i> Экспорт
-                    </button>
+                    <h2><i class="bi bi-arrow-left-right"></i> Транзакции</h2>
+                    <button class="btn btn-primary" onclick="alert('Экспорт в разработке')"><i class="bi bi-download"></i> Экспорт</button>
                 </div>
-
-                <!-- Таблица транзакций -->
                 <div class="card">
-                    <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                    <div class="card-header bg-white d-flex justify-content-between">
                         <h5 class="mb-0">Все транзакции</h5>
-                        <div class="input-group" style="width: 300px;">
+                        <div class="input-group" style="width:300px">
                             <input type="text" class="form-control" placeholder="Поиск...">
-                            <button class="btn btn-outline-secondary" type="button">
-                                <i class="bi bi-search"></i>
-                            </button>
+                            <button class="btn btn-outline-secondary"><i class="bi bi-search"></i></button>
                         </div>
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
-                            <table class="table table-hover" id="transactionsTable">
-                                <thead>
-                                    <tr>
-                                        <th>ID</th>
-                                        <th>Пользователь</th>
-                                        <th>Дата</th>
-                                        <th>Тип</th>
-                                        <th>Сумма (баллы)</th>
-                                        <th>Описание</th>
-                                        <th>Статус</th>
-                                        <th>Действия</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="transactionsBody">
-                                    <!-- Данные вставляются скриптом -->
+                            <table class="table table-hover">
+                                <thead><tr><th>ID</th><th>Пользователь</th><th>Дата</th><th>Тип</th><th>Сумма</th><th>Описание</th><th>Статус</th><th>Действия</th></tr></thead>
+                                <tbody>
+                                    <tr><td>1001</td><td>Анна Петрова</td><td>2025-12-01 14:30</td><td><span class="badge bg-danger">Списание</span></td><td>28</td><td>Оплата латте</td><td><span class="badge bg-success">Завершено</span></td><td><button class="btn btn-sm btn-outline-info" onclick="alert('Просмотр')"><i class="bi bi-eye"></i></button></td></tr>
+                                    <tr><td>1002</td><td>Иван Сидоров</td><td>2025-12-01 15:45</td><td><span class="badge bg-danger">Списание</span></td><td>35</td><td>Оплата сэндвича</td><td><span class="badge bg-success">Завершено</span></td><td><button class="btn btn-sm btn-outline-info" onclick="alert('Просмотр')"><i class="bi bi-eye"></i></button></td></tr>
+                                    <tr><td>1003</td><td>Анна Петрова</td><td>2025-12-01 16:20</td><td><span class="badge bg-success">Начисление</span></td><td>15</td><td>Бонус за покупку</td><td><span class="badge bg-success">Завершено</span></td><td><button class="btn btn-sm btn-outline-info"><i class="bi bi-eye"></i></button></td></tr>
+                                    <tr><td>1004</td><td>Мария Иванова</td><td>2025-12-02 09:15</td><td><span class="badge bg-danger">Списание</span></td><td>42</td><td>Чизкейк</td><td><span class="badge bg-success">Завершено</span></td><td><button class="btn btn-sm btn-outline-info"><i class="bi bi-eye"></i></button></td></tr>
                                 </tbody>
                             </table>
                         </div>
-                    </div>
-                    <div class="card-footer">
-                        <small class="text-muted">
-                            Обновлено: <span id="currentTime"></span>
-                        </small>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Футер -->
-    <footer class="mt-5 py-3 bg-dark text-white">
-        <div class="container text-center">
-            <small>
-                <i class="bi bi-building"></i> Колледж Метростроя Санкт-Петербург |
-                Студент: Аушакимов Илья, группа 38 |
-                Лабораторная работа №4
-            </small>
-        </div>
-    </footer>
+    <footer class="mt-5 py-3 bg-dark text-white text-center"><small>Колледж Метростроя | Аушакимов Илья, группа 38</small></footer>
 
     <script>
-        // Демо-данные транзакций
-        const transactions = [
-            { id: 1001, user: 'Анна Петрова', date: '2025-12-01 14:30', type: 'debit', amount: 28, description: 'Оплата латте', status: 'completed' },
-            { id: 1002, user: 'Иван Сидоров', date: '2025-12-01 15:45', type: 'debit', amount: 35, description: 'Оплата сэндвича', status: 'completed' },
-            { id: 1003, user: 'Анна Петрова', date: '2025-12-01 16:20', type: 'credit', amount: 15, description: 'Начисление за покупку', status: 'completed' },
-            { id: 1004, user: 'Мария Иванова', date: '2025-12-02 09:15', type: 'debit', amount: 42, description: 'Оплата чизкейка', status: 'completed' },
-            { id: 1005, user: 'Петр Смирнов', date: '2025-12-02 11:30', type: 'credit', amount: 50, description: 'Бонус за регистрацию', status: 'completed' },
-            { id: 1006, user: 'Елена Кузнецова', date: '2025-12-02 13:45', type: 'debit', amount: 18, description: 'Оплата круассана', status: 'pending' }
+        const role = localStorage.getItem('userRole');
+        if (!role) window.location.href = 'index.html';
+
+        // Построение меню (одинаково для всех страниц)
+        const menuItems = [
+            { href: 'admin.html', icon: 'bi-cup-straw', text: 'Меню кафе' },
+            { href: 'user_add.html', icon: 'bi-plus-circle', text: 'Добавить товар', roles: ['admin','manager'] },
+            { href: 'transactions.html', icon: 'bi-arrow-left-right', text: 'Транзакции', active: true },
+            { href: 'users.html', icon: 'bi-people', text: 'Пользователи' },
+            { href: 'reports.html', icon: 'bi-graph-up', text: 'Отчёты', roles: ['admin','manager'] }
         ];
+        const sidebar = document.getElementById('sidebar');
+        sidebar.innerHTML = menuItems
+            .filter(item => !item.roles || item.roles.includes(role))
+            .map(item => `<a href="${item.href}" class="list-group-item list-group-item-action ${item.active ? 'active' : ''}"><i class="bi ${item.icon}"></i> ${item.text}</a>`)
+            .join('');
 
-        // Подсчёт статистики
-        function updateStats() {
-            document.getElementById('totalTransactions').innerText = transactions.length;
-            const debits = transactions.filter(t => t.type === 'debit').length;
-            const credits = transactions.filter(t => t.type === 'credit').length;
-            document.getElementById('debits').innerText = debits;
-            document.getElementById('credits').innerText = credits;
-        }
-
-        // Отображение таблицы
-        function renderTransactions() {
-            const tbody = document.getElementById('transactionsBody');
-            tbody.innerHTML = '';
-            transactions.forEach(t => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${t.id}</td>
-                    <td>${t.user}</td>
-                    <td>${t.date}</td>
-                    <td><span class="badge bg-${t.type === 'debit' ? 'danger' : 'success'}">${t.type === 'debit' ? 'Списание' : 'Начисление'}</span></td>
-                    <td>${t.amount}</td>
-                    <td>${t.description}</td>
-                    <td><span class="badge bg-${t.status === 'completed' ? 'success' : 'warning'}">${t.status === 'completed' ? 'Завершено' : 'В обработке'}</span></td>
-                    <td>
-                        <button class="btn btn-sm btn-outline-info me-1" title="Просмотр" onclick="alert('Просмотр транзакции ${t.id}')"><i class="bi bi-eye"></i></button>
-                        <button class="btn btn-sm btn-outline-warning me-1" title="Редактировать" onclick="alert('Редактирование транзакции ${t.id}')"><i class="bi bi-pencil"></i></button>
-                        <button class="btn btn-sm btn-outline-danger" title="Удалить" onclick="if(confirm('Удалить транзакцию ${t.id}?')) alert('Удаление не реализовано')"><i class="bi bi-trash"></i></button>
-                    </td>
-                `;
-                tbody.appendChild(row);
-            });
-        }
-
-        // Обновление времени
-        function updateTime() {
-            const now = new Date();
-            const timeString = now.toLocaleDateString('ru-RU') + ' ' + now.toLocaleTimeString('ru-RU');
-            document.getElementById('currentTime').textContent = timeString;
-        }
-
-        // Инициализация
-        document.addEventListener('DOMContentLoaded', function() {
-            renderTransactions();
-            updateStats();
-            updateTime();
-            setInterval(updateTime, 60000);
+        document.getElementById('logoutBtn').addEventListener('click', () => {
+            localStorage.removeItem('userRole');
+            window.location.href = 'index.html';
         });
     </script>
 </body>
