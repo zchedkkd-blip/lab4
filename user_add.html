@@ -45,8 +45,6 @@
                     </h1>
                     <p class="text-muted">
                         Заполните форму для добавления товара в меню кафе.
-                        <br>
-                        <strong>Внимание:</strong> Числовые поля принимают только положительные числа.
                     </p>
                 </div>
 
@@ -170,10 +168,6 @@
                                           rows="3" placeholder="Дополнительная информация о товаре..."></textarea>
                             </div>
 
-                            </p>
-                                <div class="validation-message" id="validationResult"></div>
-                            </div>
-
                             <!-- Кнопки -->
                             <div class="d-flex justify-content-between mt-4">
                                 <button type="button" class="btn btn-secondary" id="resetBtn">
@@ -194,18 +188,6 @@
                         <small class="text-muted">
                             <i class="bi bi-info-circle"></i> Поля, отмеченные *, обязательны для заполнения.
                         </small>
-                    </div>
-                </div>
-
-                <!-- Инструкция -->
-                <div class="card mt-4">
-                    <div class="card-header bg-info text-white">
-                        <h5 class="mb-0"><i class="bi bi-question-circle"></i> Как работает валидация?</h5>
-                    </div>
-                    <div class="card-body">
-                       
-                        </ul>
-                        <p class="mb-0">Попробуйте нарушить правила - форма не позволит отправить некорректные данные!</p>
                     </div>
                 </div>
             </div>
@@ -230,21 +212,12 @@
         const quantityInput = document.getElementById('productQuantity');
         const priceRubInput = document.getElementById('productPriceRub');
         const pricePointsInput = document.getElementById('productPricePoints');
-        const validationResult = document.getElementById('validationResult');
-        const validationDemo = document.getElementById('validationDemo');
         
         // Максимально допустимое значение (можно настроить)
         const MAX_VALUE = 999999999;
         
         // Список числовых полей для валидации
         const numberFields = [quantityInput, priceRubInput, pricePointsInput];
-        
-        // Функция для отображения результата валидации
-        function showValidationResult(message, isError = false) {
-            validationResult.innerHTML = isError 
-                ? `<strong class="text-danger">❌ ${message}</strong>`
-                : `<strong class="text-success">✅ ${message}</strong>`;
-        }
         
         // Валидация одного числового поля
         function validateNumberField(field) {
@@ -259,62 +232,53 @@
             if (isNaN(numValue)) {
                 field.classList.remove('success');
                 field.classList.add('error');
-                showValidationResult(`"${value}" не является числом`, true);
                 return false;
             }
             
             if (!isFinite(numValue)) {
                 field.classList.remove('success');
                 field.classList.add('error');
-                showValidationResult(`Число слишком большое (выходит за пределы)`, true);
                 return false;
             }
             
             if (numValue <= 0) {
                 field.classList.remove('success');
                 field.classList.add('error');
-                showValidationResult(`Число должно быть больше 0`, true);
                 return false;
             }
             
             if (field === quantityInput && numValue < 0.1) {
                 field.classList.remove('success');
                 field.classList.add('error');
-                showValidationResult(`Количество должно быть ≥ 0.1`, true);
                 return false;
             }
             
             if (field === priceRubInput && numValue < 0.01) {
                 field.classList.remove('success');
                 field.classList.add('error');
-                showValidationResult(`Цена должна быть ≥ 0.01`, true);
                 return false;
             }
             
             if (field === pricePointsInput && numValue < 1) {
                 field.classList.remove('success');
                 field.classList.add('error');
-                showValidationResult(`Баллы должны быть ≥ 1`, true);
                 return false;
             }
             
             if (field === pricePointsInput && !Number.isInteger(numValue)) {
                 field.classList.remove('success');
                 field.classList.add('error');
-                showValidationResult(`Баллы должны быть целым числом`, true);
                 return false;
             }
             
             if (numValue > MAX_VALUE) {
                 field.classList.remove('success');
                 field.classList.add('error');
-                showValidationResult(`Число не должно превышать ${MAX_VALUE}`, true);
                 return false;
             }
             
             field.classList.remove('error');
             field.classList.add('success');
-            showValidationResult(`Число ${numValue} корректно`);
             return true;
         }
         
@@ -323,12 +287,10 @@
             const key = event.key;
             if (key === '-') {
                 event.preventDefault();
-                showValidationResult('Отрицательные числа не допускаются!', true);
                 return;
             }
             if (key === 'e' || key === 'E') {
                 event.preventDefault();
-                showValidationResult('Буква "e" не допускается!', true);
                 return;
             }
         }
@@ -353,9 +315,6 @@
             numberFields.forEach(field => {
                 field.classList.remove('success', 'error');
             });
-            validationResult.innerHTML = '';
-            validationDemo.innerHTML = 'Форма сброшена. Попробуйте ввести некорректные данные для проверки валидации.';
-            showValidationResult('Форма очищена. Можно начать заново.');
         });
         
         // Отправка формы
@@ -398,7 +357,7 @@
             
             // Создание нового товара
             const newProduct = {
-                id: Date.now(), // уникальный ID на основе времени
+                id: Date.now(),
                 name: nameInput.value,
                 category: category.value,
                 quantity: quantityInput.value + ' ' + unit.value,
@@ -413,7 +372,6 @@
             if (stored) {
                 products = JSON.parse(stored);
             } else {
-                // Если хранилище пусто, создаём базовый список
                 products = [
                     { id: 1, name: 'Капучино', category: 'Напитки', quantity: '300 мл', priceRub: '250.00', pricePoints: 25, available: true },
                     { id: 2, name: 'Латте', category: 'Напитки', quantity: '400 мл', priceRub: '280.00', pricePoints: 28, available: true },
@@ -423,15 +381,12 @@
                 ];
             }
             
-            // Добавляем новый товар
             products.push(newProduct);
             localStorage.setItem('products', JSON.stringify(products));
             
             alert(`✅ Товар "${newProduct.name}" успешно добавлен в меню!`);
             window.location.href = 'admin.html';
         });
-        
-        showValidationResult('Введите данные в форму. Попробуйте нарушить правила валидации!');
     </script>
 </body>
 </html>
