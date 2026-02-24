@@ -226,6 +226,20 @@
             }
         };
 
+        // Удаление пользователя (только для администратора)
+        window.deleteUser = function(id) {
+            const currentRole = localStorage.getItem('userRole');
+            if (currentRole !== 'admin') {
+                alert('❌ Только администратор может удалять пользователей.');
+                return;
+            }
+            if (!confirm('Вы уверены, что хотите удалить этого пользователя?')) return;
+            let users = getUsers();
+            users = users.filter(u => u.id !== id);
+            saveUsers(users);
+            renderUsers();
+        };
+
         // Отображение таблицы
         function renderUsers() {
             const users = getUsers();
@@ -233,6 +247,30 @@
             tbody.innerHTML = '';
             users.forEach(user => {
                 const row = document.createElement('tr');
+                // Определяем, какие кнопки показывать в зависимости от роли
+                const isAdmin = (role === 'admin');
+                const isManager = (role === 'manager');
+                const canEdit = isAdmin || isManager; // блокировка доступна админу и менеджеру
+                const canDelete = isAdmin; // удаление только админу
+
+                // Кнопки просмотра и редактирования показываем всем (можно оставить), но для простоты покажем всем
+                // Для не-админов/менеджеров блокировка тоже не показывается? В текущей версии кнопка блокировки есть у всех, но функция проверяет роль. 
+                // Лучше скрыть кнопки, которые недоступны. Переделаем: показываем кнопки только если есть право.
+                let actionsHtml = `
+                    <button class="btn btn-sm btn-outline-info me-1" title="Просмотр" onclick="alert('Просмотр пользователя ${user.name}')"><i class="bi bi-eye"></i></button>
+                `;
+                if (canEdit) {
+                    actionsHtml += `
+                        <button class="btn btn-sm btn-outline-warning me-1" title="Редактировать" onclick="alert('Редактирование пользователя ${user.id}')"><i class="bi bi-pencil"></i></button>
+                        <button class="btn btn-sm btn-outline-secondary me-1" title="Блокировать" onclick="toggleUserStatus(${user.id})"><i class="bi bi-lock"></i></button>
+                    `;
+                }
+                if (canDelete) {
+                    actionsHtml += `
+                        <button class="btn btn-sm btn-outline-danger" title="Удалить" onclick="deleteUser(${user.id})"><i class="bi bi-trash"></i></button>
+                    `;
+                }
+
                 row.innerHTML = `
                     <td>${user.id}</td>
                     <td>${user.name}</td>
@@ -241,11 +279,7 @@
                     <td><span class="badge bg-${user.status === 'active' ? 'success' : 'secondary'}">${user.status === 'active' ? 'Активен' : 'Неактивен'}</span></td>
                     <td>${user.points}</td>
                     <td>${user.regDate || '-'}</td>
-                    <td>
-                        <button class="btn btn-sm btn-outline-info me-1" title="Просмотр" onclick="alert('Просмотр пользователя ${user.name}')"><i class="bi bi-eye"></i></button>
-                        <button class="btn btn-sm btn-outline-warning me-1" title="Редактировать" onclick="alert('Редактирование пользователя ${user.id}')"><i class="bi bi-pencil"></i></button>
-                        <button class="btn btn-sm btn-outline-danger" title="Блокировать" onclick="toggleUserStatus(${user.id})"><i class="bi bi-lock"></i></button>
-                    </td>
+                    <td>${actionsHtml}</td>
                 `;
                 tbody.appendChild(row);
             });
@@ -253,7 +287,7 @@
             document.getElementById('activeUsers').innerText = users.filter(u => u.status === 'active').length;
         }
 
-        // Доступ к добавлению пользователя
+        // Доступ к добавлению пользователя (только админ/менеджер)
         if (role !== 'admin' && role !== 'manager') {
             document.getElementById('addUserBtn').style.display = 'none';
         }
@@ -276,7 +310,7 @@
             }
 
             const users = getUsers();
-            const newId = getNextId(users);   // ← теперь последовательный ID
+            const newId = getNextId(users);
             const newUser = {
                 id: newId,
                 name: name,
@@ -284,7 +318,7 @@
                 phone: phone,
                 status: status,
                 points: points,
-                regDate: new Date().toISOString().slice(0,10)  // YYYY-MM-DD
+                regDate: new Date().toISOString().slice(0,10)
             };
             users.push(newUser);
             saveUsers(users);
