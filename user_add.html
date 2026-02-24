@@ -31,10 +31,9 @@
     </nav>
 
     <div class="container py-5" id="mainContent">
-        <!-- Форма будет вставлена скриптом -->
+        <!-- Здесь будет динамически вставлена форма -->
     </div>
 
-    <!-- Футер -->
     <footer class="mt-5 py-3 bg-dark text-white">
         <div class="container text-center">
             <small><i class="bi bi-building"></i> Колледж Метростроя Санкт-Петербург | Студент: Аушакимов Илья, группа 38 | Лабораторная работа №4</small>
@@ -49,7 +48,6 @@
             alert('❌ У вас нет прав на добавление товаров.');
             window.location.href = 'admin.html';
         } else {
-            // Вставляем форму (полностью, как ранее)
             document.getElementById('mainContent').innerHTML = `
                 <div class="row justify-content-center">
                     <div class="col-lg-8">
@@ -101,7 +99,7 @@
                                             </select>
                                             <div class="validation-message text-danger" id="unitError"></div>
                                         </div>
-                                    </div>
+                    </div>
                                     <!-- Цены -->
                                     <div class="row mb-4">
                                         <div class="col-md-6">
@@ -125,7 +123,7 @@
                                     </div>
                                     <!-- Доступность -->
                                     <div class="mb-4">
-                                        <label class="form-label fw-bold"><i class="bi bi-toggle-on"></i> Доступность товара</label>
+                                        <label class="form-label fw-bold"><i class="bi bi-toggle-on"></i> Доступность</label>
                                         <div class="form-check">
                                             <input class="form-check-input" type="radio" name="availability" id="availableYes" value="yes" checked>
                                             <label class="form-check-label" for="availableYes"><span class="badge bg-success">Доступен</span></label>
@@ -155,7 +153,7 @@
                 </div>
             `;
 
-            // Логика валидации и отправки (такая же, как в предыдущих версиях)
+            // --- Валидация и отправка ---
             const form = document.getElementById('productForm');
             const nameInput = document.getElementById('productName');
             const quantityInput = document.getElementById('productQuantity');
@@ -218,8 +216,9 @@
                     id: Date.now(),
                     name: nameInput.value,
                     category: category.value,
-                    quantity: quantityInput.value + ' ' + unit.value,
-                    priceRub: priceRubInput.value,
+                    quantity: parseFloat(quantityInput.value),
+                    unit: unit.value,
+                    priceRub: parseFloat(priceRubInput.value),
                     pricePoints: parseInt(pricePointsInput.value),
                     available: document.querySelector('input[name="availability"]:checked').value === 'yes'
                 };
