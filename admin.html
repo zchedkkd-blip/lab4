@@ -38,12 +38,8 @@
                     <div class="card-header bg-primary text-white">
                         <h6 class="mb-0"><i class="bi bi-menu-button"></i> Меню</h6>
                     </div>
-                    <div class="list-group list-group-flush" id="sidebar">
-                        <!-- будет заполнено скриптом -->
-                    </div>
+                    <div class="list-group list-group-flush" id="sidebar"></div>
                 </div>
-                
-                <!-- Статистика -->
                 <div class="card mt-3">
                     <div class="card-header bg-info text-white">
                         <h6 class="mb-0"><i class="bi bi-bar-chart"></i> Статистика</h6>
@@ -86,6 +82,7 @@
                                         <th>Название</th>
                                         <th>Категория</th>
                                         <th>Количество</th>
+                                        <th>Единица</th>
                                         <th>Цена (руб.)</th>
                                         <th>Цена (баллы)</th>
                                         <th>Доступно</th>
@@ -115,11 +112,10 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // Роль из localStorage
         const role = localStorage.getItem('userRole');
         if (!role) window.location.href = 'index.html';
 
-        // ---- Боковое меню ----
+        // Боковое меню
         const menuItems = [
             { href: 'admin.html', icon: 'bi-cup-straw', text: 'Меню кафе', active: true },
             { href: 'user_add.html', icon: 'bi-plus-circle', text: 'Добавить товар', roles: ['admin','manager'] },
@@ -128,19 +124,18 @@
             { href: 'reports.html', icon: 'bi-graph-up', text: 'Отчёты', roles: ['admin','manager'] }
         ];
 
-        const sidebar = document.getElementById('sidebar');
-        sidebar.innerHTML = menuItems
+        document.getElementById('sidebar').innerHTML = menuItems
             .filter(item => !item.roles || item.roles.includes(role))
             .map(item => `<a href="${item.href}" class="list-group-item list-group-item-action ${item.active ? 'active' : ''}"><i class="bi ${item.icon}"></i> ${item.text}</a>`)
             .join('');
 
-        // ---- Данные товаров ----
+        // ---- Товары (теперь с отдельными полями quantity и unit) ----
         const baseProducts = [
-            { id: 1, name: 'Капучино', category: 'Напитки', quantity: '300 мл', priceRub: '250.00', pricePoints: 25, available: true },
-            { id: 2, name: 'Латте', category: 'Напитки', quantity: '400 мл', priceRub: '280.00', pricePoints: 28, available: true },
-            { id: 3, name: 'Экспрессо', category: 'Напитки', quantity: '200 мл', priceRub: '200.00', pricePoints: 20, available: true },
-            { id: 4, name: 'Чизкейк Нью-Йорк', category: 'Десерты', quantity: '150 г', priceRub: '320.00', pricePoints: 32, available: true },
-            { id: 5, name: 'Круассан с шоколадом', category: 'Выпечка', quantity: '120 г', priceRub: '180.00', pricePoints: 18, available: true }
+            { id: 1, name: 'Капучино', category: 'Напитки', quantity: 300, unit: 'мл', priceRub: 250.00, pricePoints: 25, available: true },
+            { id: 2, name: 'Латте', category: 'Напитки', quantity: 400, unit: 'мл', priceRub: 280.00, pricePoints: 28, available: true },
+            { id: 3, name: 'Экспрессо', category: 'Напитки', quantity: 200, unit: 'мл', priceRub: 200.00, pricePoints: 20, available: true },
+            { id: 4, name: 'Чизкейк Нью-Йорк', category: 'Десерты', quantity: 150, unit: 'г', priceRub: 320.00, pricePoints: 32, available: true },
+            { id: 5, name: 'Круассан с шоколадом', category: 'Выпечка', quantity: 120, unit: 'г', priceRub: 180.00, pricePoints: 18, available: true }
         ];
 
         function getProducts() {
@@ -156,14 +151,13 @@
             localStorage.setItem('products', JSON.stringify(products));
         }
 
-        // Функция удаления товара с проверкой роли
         window.deleteProduct = function(id) {
-            // Проверяем, имеет ли текущий пользователь право на удаление
             const currentRole = localStorage.getItem('userRole');
             if (currentRole !== 'admin' && currentRole !== 'manager') {
                 alert('❌ У вас нет прав на удаление товаров.');
                 return;
             }
+            if (!confirm('Удалить товар?')) return;
             let products = getProducts();
             products = products.filter(p => p.id !== id);
             saveProducts(products);
@@ -175,8 +169,6 @@
             const tbody = document.getElementById('menuBody');
             tbody.innerHTML = '';
             products.forEach((product, index) => {
-                const row = document.createElement('tr');
-                // Для пользователей и гостей кнопки действий не показываем
                 const canEdit = (role === 'admin' || role === 'manager');
                 const actionsCell = canEdit ? `
                     <td class="actions-cell">
@@ -191,6 +183,7 @@
                     <td><i class="bi bi-cup-hot me-2"></i><strong>${product.name}</strong></td>
                     <td><span class="badge bg-primary">${product.category}</span></td>
                     <td>${product.quantity}</td>
+                    <td>${product.unit}</td>
                     <td>${product.priceRub}</td>
                     <td><span class="badge bg-warning">${product.pricePoints}</span></td>
                     <td><span class="badge bg-${product.available ? 'success' : 'danger'}">${product.available ? 'Да' : 'Нет'}</span></td>
@@ -206,12 +199,11 @@
             document.getElementById('currentTime').textContent = now.toLocaleDateString('ru-RU') + ' ' + now.toLocaleTimeString('ru-RU');
         }
 
-        // Управление видимостью кнопки добавления и заголовка действий
+        // Скрываем колонку действий для неадминистраторов
         if (role !== 'admin' && role !== 'manager') {
             document.getElementById('addProductBtn').style.display = 'none';
             document.getElementById('actionsHeader').style.display = 'none';
-        } else {
-            document.getElementById('actionsHeader').style.display = 'table-cell';
+            document.querySelectorAll('.actions-cell').forEach(cell => cell.style.display = 'none');
         }
 
         document.getElementById('logoutBtn').addEventListener('click', function() {
