@@ -164,7 +164,7 @@
         const role = localStorage.getItem('userRole');
         if (!role) window.location.href = 'index.html';
 
-        // Боковое меню
+        // ---- Боковое меню (общее для всех страниц) ----
         const menuItems = [
             { href: 'admin.html', icon: 'bi-cup-straw', text: 'Меню кафе' },
             { href: 'user_add.html', icon: 'bi-plus-circle', text: 'Добавить товар', roles: ['admin','manager'] },
@@ -172,6 +172,7 @@
             { href: 'users.html', icon: 'bi-people', text: 'Пользователи', active: true },
             { href: 'reports.html', icon: 'bi-graph-up', text: 'Отчёты', roles: ['admin','manager'] }
         ];
+
         document.getElementById('sidebar').innerHTML = menuItems
             .filter(item => !item.roles || item.roles.includes(role))
             .map(item => `<a href="${item.href}" class="list-group-item list-group-item-action ${item.active ? 'active' : ''}"><i class="bi ${item.icon}"></i> ${item.text}</a>`)
@@ -183,7 +184,7 @@
             window.location.href = 'index.html';
         });
 
-        // ---- Управление пользователями ----
+        // ---- Данные пользователей (базовые) ----
         const baseUsers = [
             { id: 1, name: 'Анна Петрова', email: 'anna.p@mail.ru', phone: '+7 (999) 123-45-67', status: 'active', points: 1250, regDate: '2025-01-15' },
             { id: 2, name: 'Иван Сидоров', email: 'ivan.s@mail.ru', phone: '+7 (999) 234-56-78', status: 'active', points: 890, regDate: '2025-02-20' },
@@ -203,6 +204,29 @@
             localStorage.setItem('users', JSON.stringify(users));
         }
 
+        // Функция для получения следующего ID (макс + 1)
+        function getNextId(users) {
+            if (users.length === 0) return 1;
+            return Math.max(...users.map(u => u.id)) + 1;
+        }
+
+        // Блокировка/разблокировка с проверкой роли
+        window.toggleUserStatus = function(id) {
+            const currentRole = localStorage.getItem('userRole');
+            if (currentRole !== 'admin' && currentRole !== 'manager') {
+                alert('❌ У вас нет прав на изменение статуса пользователей.');
+                return;
+            }
+            let users = getUsers();
+            const index = users.findIndex(u => u.id === id);
+            if (index !== -1) {
+                users[index].status = users[index].status === 'active' ? 'inactive' : 'active';
+                saveUsers(users);
+                renderUsers();
+            }
+        };
+
+        // Отображение таблицы
         function renderUsers() {
             const users = getUsers();
             const tbody = document.getElementById('usersBody');
@@ -229,27 +253,12 @@
             document.getElementById('activeUsers').innerText = users.filter(u => u.status === 'active').length;
         }
 
-        // Функция блокировки/разблокировки с проверкой роли
-        window.toggleUserStatus = function(id) {
-            const currentRole = localStorage.getItem('userRole');
-            if (currentRole !== 'admin' && currentRole !== 'manager') {
-                alert('❌ У вас нет прав на изменение статуса пользователей.');
-                return;
-            }
-            let users = getUsers();
-            const index = users.findIndex(u => u.id === id);
-            if (index !== -1) {
-                users[index].status = users[index].status === 'active' ? 'inactive' : 'active';
-                saveUsers(users);
-                renderUsers();
-            }
-        };
-
         // Доступ к добавлению пользователя
         if (role !== 'admin' && role !== 'manager') {
             document.getElementById('addUserBtn').style.display = 'none';
         }
 
+        // Сохранение нового пользователя
         document.getElementById('saveUserBtn').addEventListener('click', function() {
             const name = document.getElementById('userName').value.trim();
             const email = document.getElementById('userEmail').value.trim();
@@ -267,14 +276,15 @@
             }
 
             const users = getUsers();
+            const newId = getNextId(users);   // ← теперь последовательный ID
             const newUser = {
-                id: Date.now(),
+                id: newId,
                 name: name,
                 email: email,
                 phone: phone,
                 status: status,
                 points: points,
-                regDate: new Date().toISOString().slice(0,10)
+                regDate: new Date().toISOString().slice(0,10)  // YYYY-MM-DD
             };
             users.push(newUser);
             saveUsers(users);
@@ -285,7 +295,7 @@
             document.getElementById('addUserForm').reset();
         });
 
-        // Поиск
+        // Поиск по таблице
         document.getElementById('searchInput').addEventListener('input', function(e) {
             const term = e.target.value.toLowerCase();
             const rows = document.querySelectorAll('#usersBody tr');
@@ -294,6 +304,7 @@
             });
         });
 
+        // Инициализация
         renderUsers();
     </script>
 </body>
