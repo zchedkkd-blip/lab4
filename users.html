@@ -229,7 +229,13 @@
             document.getElementById('activeUsers').innerText = users.filter(u => u.status === 'active').length;
         }
 
+        // Функция блокировки/разблокировки с проверкой роли
         window.toggleUserStatus = function(id) {
+            const currentRole = localStorage.getItem('userRole');
+            if (currentRole !== 'admin' && currentRole !== 'manager') {
+                alert('❌ У вас нет прав на изменение статуса пользователей.');
+                return;
+            }
             let users = getUsers();
             const index = users.findIndex(u => u.id === id);
             if (index !== -1) {
@@ -239,7 +245,7 @@
             }
         };
 
-        // Доступ к добавлению
+        // Доступ к добавлению пользователя
         if (role !== 'admin' && role !== 'manager') {
             document.getElementById('addUserBtn').style.display = 'none';
         }
