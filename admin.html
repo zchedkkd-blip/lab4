@@ -156,7 +156,14 @@
             localStorage.setItem('products', JSON.stringify(products));
         }
 
+        // Функция удаления товара с проверкой роли
         window.deleteProduct = function(id) {
+            // Проверяем, имеет ли текущий пользователь право на удаление
+            const currentRole = localStorage.getItem('userRole');
+            if (currentRole !== 'admin' && currentRole !== 'manager') {
+                alert('❌ У вас нет прав на удаление товаров.');
+                return;
+            }
             let products = getProducts();
             products = products.filter(p => p.id !== id);
             saveProducts(products);
@@ -169,6 +176,16 @@
             tbody.innerHTML = '';
             products.forEach((product, index) => {
                 const row = document.createElement('tr');
+                // Для пользователей и гостей кнопки действий не показываем
+                const canEdit = (role === 'admin' || role === 'manager');
+                const actionsCell = canEdit ? `
+                    <td class="actions-cell">
+                        <button class="btn btn-sm btn-outline-info me-1" title="Просмотр" onclick="alert('Просмотр товара: ${product.name}')"><i class="bi bi-eye"></i></button>
+                        <button class="btn btn-sm btn-outline-warning me-1" title="Редактировать" onclick="alert('Редактирование пока не реализовано')"><i class="bi bi-pencil"></i></button>
+                        <button class="btn btn-sm btn-outline-danger" title="Удалить" onclick="deleteProduct(${product.id})"><i class="bi bi-trash"></i></button>
+                    </td>
+                ` : '<td>-</td>';
+
                 row.innerHTML = `
                     <td>${index + 1}</td>
                     <td><i class="bi bi-cup-hot me-2"></i><strong>${product.name}</strong></td>
@@ -177,11 +194,7 @@
                     <td>${product.priceRub}</td>
                     <td><span class="badge bg-warning">${product.pricePoints}</span></td>
                     <td><span class="badge bg-${product.available ? 'success' : 'danger'}">${product.available ? 'Да' : 'Нет'}</span></td>
-                    <td class="actions-cell">
-                        <button class="btn btn-sm btn-outline-info me-1" title="Просмотр" onclick="alert('Просмотр товара: ${product.name}')"><i class="bi bi-eye"></i></button>
-                        <button class="btn btn-sm btn-outline-warning me-1" title="Редактировать" onclick="alert('Редактирование пока не реализовано')"><i class="bi bi-pencil"></i></button>
-                        <button class="btn btn-sm btn-outline-danger" title="Удалить" onclick="deleteProduct(${product.id})"><i class="bi bi-trash"></i></button>
-                    </td>
+                    ${actionsCell}
                 `;
                 tbody.appendChild(row);
             });
@@ -193,11 +206,12 @@
             document.getElementById('currentTime').textContent = now.toLocaleDateString('ru-RU') + ' ' + now.toLocaleTimeString('ru-RU');
         }
 
-        // Управление видимостью кнопки добавления и столбца действий
+        // Управление видимостью кнопки добавления и заголовка действий
         if (role !== 'admin' && role !== 'manager') {
             document.getElementById('addProductBtn').style.display = 'none';
             document.getElementById('actionsHeader').style.display = 'none';
-            document.querySelectorAll('.actions-cell').forEach(cell => cell.style.display = 'none');
+        } else {
+            document.getElementById('actionsHeader').style.display = 'table-cell';
         }
 
         document.getElementById('logoutBtn').addEventListener('click', function() {
