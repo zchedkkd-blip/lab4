@@ -174,11 +174,6 @@
             const MAX_VALUE = 999999999;
             const numberFields = [quantityInput, priceRubInput, pricePointsInput];
 
-            // Вспомогательная функция для вывода ошибки (для совместимости с предыдущим кодом)
-            function showValidationResult(message, isError = false) {
-                // не используется в этом варианте, но оставим для возможного использования
-            }
-
             function validateNumberField(field) {
                 const value = field.value.trim();
                 if (!value) {
@@ -251,7 +246,6 @@
             form.addEventListener('submit', function(e) {
                 e.preventDefault();
 
-                // Проверка названия
                 if (nameInput.value.length < 2) {
                     alert('Название должно содержать минимум 2 символа');
                     nameInput.focus();
@@ -272,7 +266,6 @@
                     return;
                 }
 
-                // Проверка всех числовых полей
                 let allValid = true;
                 numberFields.forEach(f => {
                     if (!validateNumberField(f)) allValid = false;
@@ -283,7 +276,6 @@
                     return;
                 }
 
-                // Создание нового товара
                 const newProduct = {
                     id: Date.now(),
                     name: nameInput.value,
