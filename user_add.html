@@ -82,7 +82,7 @@
                                         <div class="validation-message text-danger" id="categoryError"></div>
                                     </div>
 
-                                    <!-- Количество (целое от 1 до 1000) и единица измерения -->
+                                    <!-- Количество (целое от 1 до 1000) -->
                                     <div class="row mb-4">
                                         <div class="col-md-6">
                                             <label class="form-label fw-bold"><i class="bi bi-123"></i> Количество *</label>
@@ -105,28 +105,30 @@
                                         </div>
                                     </div>
 
-                                    <!-- Цены -->
+                                    <!-- Цена в рублях (от 0.01 до 1000) -->
                                     <div class="row mb-4">
                                         <div class="col-md-6">
                                             <label class="form-label fw-bold"><i class="bi bi-currency-ruble"></i> Цена в рублях *</label>
                                             <div class="input-group">
                                                 <input type="number" class="form-control positive-number" 
-                                                       id="productPriceRub" min="0.01" max="999999999" step="0.01" 
+                                                       id="productPriceRub" min="0.01" max="1000" step="0.01" 
                                                        placeholder="250.00" required>
                                                 <span class="input-group-text">₽</span>
                                             </div>
-                                            <div class="form-text">≥ 0.01, ≤ 999999999</div>
+                                            <div class="form-text">Число от 0.01 до 1000</div>
                                             <div class="validation-message text-danger" id="priceRubError"></div>
                                         </div>
+
+                                        <!-- Цена в баллах (целое от 1 до 1000) -->
                                         <div class="col-md-6">
                                             <label class="form-label fw-bold"><i class="bi bi-star"></i> Цена в баллах *</label>
                                             <div class="input-group">
                                                 <input type="number" class="form-control positive-number" 
-                                                       id="productPricePoints" min="1" max="999999999" step="1" 
+                                                       id="productPricePoints" min="1" max="1000" step="1" 
                                                        placeholder="25" required>
                                                 <span class="input-group-text">баллов</span>
                                             </div>
-                                            <div class="form-text">Целое ≥ 1, ≤ 999999999</div>
+                                            <div class="form-text">Целое число от 1 до 1000</div>
                                             <div class="validation-message text-danger" id="pricePointsError"></div>
                                         </div>
                                     </div>
@@ -171,76 +173,96 @@
             const quantityInput = document.getElementById('productQuantity');
             const priceRubInput = document.getElementById('productPriceRub');
             const pricePointsInput = document.getElementById('productPricePoints');
-            const MAX_VALUE = 999999999;
             const numberFields = [quantityInput, priceRubInput, pricePointsInput];
 
-            function validateNumberField(field) {
+            // Элементы для вывода ошибок
+            const quantityError = document.getElementById('quantityError');
+            const priceRubError = document.getElementById('priceRubError');
+            const pricePointsError = document.getElementById('pricePointsError');
+
+            // Валидация одного числового поля с выводом ошибки
+            function validateNumberField(field, errorElement, min, max, isInteger = false, customCheck = null) {
                 const value = field.value.trim();
                 if (!value) {
                     field.classList.remove('success', 'error');
+                    errorElement.textContent = '';
                     return false;
                 }
                 const numValue = parseFloat(value);
                 if (isNaN(numValue) || !isFinite(numValue)) {
                     field.classList.add('error');
+                    errorElement.textContent = 'Введите корректное число';
                     return false;
                 }
-                // Проверка на положительность
                 if (numValue <= 0) {
                     field.classList.add('error');
+                    errorElement.textContent = 'Число должно быть больше 0';
                     return false;
                 }
-
-                // Специфические проверки для каждого поля
-                if (field === quantityInput) {
-                    if (numValue < 1 || numValue > 1000) {
-                        field.classList.add('error');
-                        return false;
-                    }
-                    if (!Number.isInteger(numValue)) {
-                        field.classList.add('error');
-                        return false;
-                    }
+                if (numValue < min || numValue > max) {
+                    field.classList.add('error');
+                    errorElement.textContent = `Значение должно быть от ${min} до ${max}`;
+                    return false;
                 }
-                if (field === priceRubInput) {
-                    if (numValue < 0.01 || numValue > MAX_VALUE) {
-                        field.classList.add('error');
-                        return false;
-                    }
+                if (isInteger && !Number.isInteger(numValue)) {
+                    field.classList.add('error');
+                    errorElement.textContent = 'Число должно быть целым';
+                    return false;
                 }
-                if (field === pricePointsInput) {
-                    if (numValue < 1 || numValue > MAX_VALUE) {
-                        field.classList.add('error');
-                        return false;
-                    }
-                    if (!Number.isInteger(numValue)) {
-                        field.classList.add('error');
-                        return false;
-                    }
+                if (customCheck && !customCheck(numValue)) {
+                    field.classList.add('error');
+                    errorElement.textContent = customCheck.message || 'Некорректное значение';
+                    return false;
                 }
-
                 field.classList.remove('error');
                 field.classList.add('success');
+                errorElement.textContent = '';
                 return true;
             }
 
+            // Запрет ввода некорректных символов
             function preventInvalidInput(e) {
                 if (e.key === '-' || e.key === 'e' || e.key === 'E') e.preventDefault();
             }
 
             numberFields.forEach(f => {
                 f.addEventListener('keydown', preventInvalidInput);
-                f.addEventListener('input', function() { validateNumberField(this); });
-                f.addEventListener('blur', function() { validateNumberField(this); });
+            });
+
+            quantityInput.addEventListener('input', function() {
+                validateNumberField(quantityInput, quantityError, 1, 1000, true);
+            });
+            quantityInput.addEventListener('blur', function() {
+                validateNumberField(quantityInput, quantityError, 1, 1000, true);
+            });
+
+            priceRubInput.addEventListener('input', function() {
+                validateNumberField(priceRubInput, priceRubError, 0.01, 1000, false);
+            });
+            priceRubInput.addEventListener('blur', function() {
+                validateNumberField(priceRubInput, priceRubError, 0.01, 1000, false);
+            });
+
+            pricePointsInput.addEventListener('input', function() {
+                validateNumberField(pricePointsInput, pricePointsError, 1, 1000, true);
+            });
+            pricePointsInput.addEventListener('blur', function() {
+                validateNumberField(pricePointsInput, pricePointsError, 1, 1000, true);
             });
 
             nameInput.addEventListener('input', function() {
-                document.getElementById('nameError').textContent = (this.value.length < 2 && this.value.length > 0) ? 'Минимум 2 символа' : '';
+                const nameError = document.getElementById('nameError');
+                if (this.value.length < 2 && this.value.length > 0) {
+                    nameError.textContent = 'Минимум 2 символа';
+                } else {
+                    nameError.textContent = '';
+                }
             });
 
             document.getElementById('resetBtn').addEventListener('click', function() {
                 form.reset();
                 numberFields.forEach(f => f.classList.remove('success', 'error'));
+                [quantityError, priceRubError, pricePointsError].forEach(e => e.textContent = '');
             });
 
             form.addEventListener('submit', function(e) {
@@ -266,13 +288,12 @@
                     return;
                 }
 
-                let allValid = true;
-                numberFields.forEach(f => {
-                    if (!validateNumberField(f)) allValid = false;
-                });
+                const quantityValid = validateNumberField(quantityInput, quantityError, 1, 1000, true);
+                const priceRubValid = validateNumberField(priceRubInput, priceRubError, 0.01, 1000, false);
+                const pricePointsValid = validateNumberField(pricePointsInput, pricePointsError, 1, 1000, true);
 
-                if (!allValid) {
-                    alert('Проверьте числовые поля. Количество должно быть целым от 1 до 1000, цены — положительными.');
+                if (!quantityValid || !priceRubValid || !pricePointsValid) {
+                    alert('Проверьте числовые поля на соответствие допустимым диапазонам.');
                     return;
                 }
 
